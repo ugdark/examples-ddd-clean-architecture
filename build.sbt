@@ -1,4 +1,4 @@
-import Dependencies.{Versions, commonSettings, testSettings}
+import Dependencies.{commonSettings, testSettings, Versions}
 
 //crossScalaVersions := Seq(
 //  Versions.scala2,
@@ -22,7 +22,8 @@ lazy val domain = project
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    idePackagePrefix := Some("com.example.domain")
+    idePackagePrefix :=
+      Some("com.example.domain")
   )
   .dependsOn(infrastructure % compileAndTest)
 
@@ -44,7 +45,6 @@ lazy val adaptersAPI = project
   )
   .dependsOn(domain % compileAndTest)
 
-
 lazy val docs = (project in file("docs"))
   .enablePlugins(ParadoxPlugin)
 
@@ -58,7 +58,11 @@ lazy val aggregatedProjects = Seq[ProjectReference](
 lazy val root = (project in file("."))
   .settings(
     name := "examples-ddd-clean-architecture",
-    Global / excludeLintKeys += idePackagePrefix
+    Global / excludeLintKeys += idePackagePrefix,
+    // scalafmtAll, scalafmtSbt scalafixまとめて全部
+    commands += Command.command("format") { st =>
+        Command.process("scalafmtSbt; scalafmtAll; scalafixAll", st)
+      }
   )
   .aggregate(aggregatedProjects: _*)
 

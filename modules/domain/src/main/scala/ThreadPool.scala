@@ -4,8 +4,8 @@ import java.util.concurrent.{ExecutorService, Executors}
 import scala.concurrent.ExecutionContext
 
 /**
- * 実運用だとActorのThreadPoolで問題なさそう。
- */
+  * 実運用だとActorのThreadPoolで問題なさそう。
+  */
 
 object ThreadPool {
 
@@ -13,7 +13,6 @@ object ThreadPool {
 
   // とりあえず雑に20
   val blocking: ExecutionContext = new BlockingExecutionContext(20)
-
 
 }
 

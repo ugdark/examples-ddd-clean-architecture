@@ -1,6 +1,7 @@
 import sbt.Keys._
 import sbt.{Def, _}
 import sbtide.Keys.idePackagePrefix
+import scalafix.sbt.ScalafixPlugin.autoImport.{scalafixOnCompile, scalafixSemanticdb}
 //import sbtide.Keys.idePackagePrefix
 
 import java.time.format.DateTimeFormatter
@@ -40,8 +41,15 @@ object Dependencies {
     idePackagePrefix := Some("com.example"),
     scalacOptions := Seq(
         "-deprecation",
-        "-feature"
+        "-feature",
+        "-Ywarn-unused",
+        "-Xlint:unused"
       ),
+    // scalafixで追加 -->
+    semanticdbEnabled := true,
+    scalafixOnCompile := true,
+    semanticdbVersion := scalafixSemanticdb.revision,
+    // scalafixで追加 <--
     libraryDependencies ++= Seq(
         "org.typelevel" %% "cats-core"  % Versions.cats,
         "com.typesafe"   % "config"     % Versions.typeSafeConfig,
