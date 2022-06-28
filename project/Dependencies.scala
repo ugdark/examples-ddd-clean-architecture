@@ -1,5 +1,5 @@
 import sbt.Keys._
-import sbt.{Def, _}
+import sbt._
 import sbtide.Keys.idePackagePrefix
 import scalafix.sbt.ScalafixPlugin.autoImport.{scalafixOnCompile, scalafixSemanticdb}
 //import sbtide.Keys.idePackagePrefix
@@ -15,7 +15,7 @@ object Dependencies {
       .format(DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss"))
 
   // Disable ScalaDoc
-  lazy val disableScalaDocSettings = Seq(
+  val disableScalaDocSettings: SettingsDefinition = Seq(
     Compile / doc / sources := Seq.empty,
     Compile / packageDoc / publishArtifact := false
   )
@@ -34,7 +34,7 @@ object Dependencies {
     val cats = "2.7.0"
   }
 
-  lazy val commonSettings = Seq(
+  val commonSettings: SettingsDefinition = Seq(
     organization := "com.kokodayo",
     scalaVersion := Versions.scala2,
     version := "1.0.0",
@@ -57,7 +57,7 @@ object Dependencies {
       )
   )
 
-  lazy val testSettings: Seq[Def.Setting[_ >: Seq[ModuleID] with Task[Seq[String]] <: Equals]] = Seq(
+  val testSettings: SettingsDefinition = Seq(
     libraryDependencies ++= Seq(
         "org.scalatest" %% "scalatest"       % Versions.scalaTest % Test,
         "ch.qos.logback" % "logback-classic" % Versions.logbackClassic

@@ -1,4 +1,4 @@
-import Dependencies.{commonSettings, testSettings, Versions}
+import Dependencies.{commonSettings, disableScalaDocSettings, testSettings}
 
 //crossScalaVersions := Seq(
 //  Versions.scala2,
@@ -8,7 +8,7 @@ import Dependencies.{commonSettings, testSettings, Versions}
 val compileAndTest: String = "compile->compile;test->test"
 
 // 責務: 業務を持たない。例：他のPJでも使えるような物
-lazy val infrastructure = project
+val infrastructure = project
   .in(file("modules/infrastructure"))
   .settings(commonSettings)
   .settings(testSettings)
@@ -16,8 +16,9 @@ lazy val infrastructure = project
     idePackagePrefix := Some("com.example.infrastructure")
   )
 
+
 // 責務: 業務を担う
-lazy val domain = project
+val domain = project
   .in(file("modules/domain"))
   .settings(commonSettings)
   .settings(testSettings)
@@ -27,7 +28,7 @@ lazy val domain = project
   )
   .dependsOn(infrastructure % compileAndTest)
 
-lazy val adaptersDB = project
+val adaptersDB = project
   .in(file("modules/adaptors/db"))
   .settings(commonSettings)
   .settings(testSettings)
@@ -36,7 +37,7 @@ lazy val adaptersDB = project
   )
   .dependsOn(domain % compileAndTest)
 
-lazy val adaptersAPI = project
+val adaptersAPI = project
   .in(file("modules/adaptors/api"))
   .settings(commonSettings)
   .settings(testSettings)
@@ -45,17 +46,18 @@ lazy val adaptersAPI = project
   )
   .dependsOn(domain % compileAndTest)
 
-lazy val docs = (project in file("docs"))
+val docs = (project in file("docs"))
   .enablePlugins(ParadoxPlugin)
 
-lazy val aggregatedProjects = Seq[ProjectReference](
+val aggregatedProjects = Seq[ProjectReference](
   infrastructure,
   domain,
   adaptersDB,
   adaptersAPI
 )
 
-lazy val root = (project in file("."))
+val root = (project in file("."))
+  .settings(disableScalaDocSettings)
   .settings(
     name := "examples-ddd-clean-architecture",
     Global / excludeLintKeys += idePackagePrefix,
@@ -66,7 +68,7 @@ lazy val root = (project in file("."))
   )
   .aggregate(aggregatedProjects: _*)
 
-//lazy val example = project
+//val example = project
 //  .in(file("example"))
 //  .settings(
 //    scalaVersion := "2.13.6",
