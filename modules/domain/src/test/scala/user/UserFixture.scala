@@ -1,12 +1,12 @@
 package com.example.domain
 package user
 
-object UserFixture {
+object UserFixture extends TestSupport {
 
-  def create(
-      id: Long = DummyIdGenerators.User.generate.value,
+  def generate(
+      id: String = idGenerator.generate(),
       name: String = new scala.util.Random(new java.security.SecureRandom()).alphanumeric.take(10).mkString
-  ): User = {
-    User(UserId(id), UserName(name))
+  )(implicit metaDataCreator: EntityMetaDataCreator = metaDataCreator): User = {
+    User(UserId(id), UserName(name), metaDataCreator.create)
   }
 }

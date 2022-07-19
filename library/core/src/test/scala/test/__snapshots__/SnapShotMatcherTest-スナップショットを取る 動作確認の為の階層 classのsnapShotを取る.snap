@@ -1,0 +1,7 @@
+User(
+  name = "nishiyama",
+  message = "hoge",
+  school = School("本郷小学校"),
+  club = Club("野球部"),
+  hoge = Hoge(Fuga("moge"))
+)
