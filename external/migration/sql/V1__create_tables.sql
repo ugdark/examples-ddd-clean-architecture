@@ -1,4 +1,4 @@
-CREATE TABLE `User` (
+CREATE TABLE `user` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '識別子',
   `name` varchar(255) NOT NULL COMMENT '名前',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
