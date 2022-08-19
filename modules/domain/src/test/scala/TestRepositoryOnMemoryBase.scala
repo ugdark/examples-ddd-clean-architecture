@@ -49,10 +49,9 @@ trait TestRepositoryOnMemoryBase[Id <: domain.EntityId, Entity <: domain.Entity[
   /**
     * clearすべて消す
     *
-   * @param ioc IOContext
     * @return Success(true) 成功
     */
-  def clear()(implicit ioc: IOContext = IOContext.Empty): Try[Boolean] = {
+  def clear(): Try[Boolean] = {
     storage.clear()
     Success(true)
   }
