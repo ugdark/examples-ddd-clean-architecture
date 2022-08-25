@@ -1,16 +1,17 @@
 import Dependencies._
 
-//crossScalaVersions := Seq(
-//  Versions.scala2,
-//  Versions.scala3
-//)
-
 val compileAndTest: String = "compile->compile;test->test"
 
 // 責務: domain側で使うというか自分用ライブラリ群
 lazy val core = project
-  .in(file("library/core"))
-  .settings(Core.settings)
+  .in(file("modules/library/core"))
+  .settings(commonSettings, testSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+        Modules.googleDiff,
+        Modules.typeSafe.config
+      )
+  )
 
 // Enterprise Business Rules (Entities)
 // 責務: ドメイン知識を定義する層,他の層に依存しない事
@@ -24,7 +25,12 @@ lazy val core = project
  */
 lazy val domain = project
   .in(file("modules/domain"))
-  .settings(Domain.settings)
+  .settings(commonSettings, testSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+        Modules.typeSafe.config
+      )
+  )
   .dependsOn(core % compileAndTest)
 
 // Application Business Rules (Use Cases)
@@ -32,59 +38,82 @@ lazy val domain = project
 // 責務: ドメイン層を使って何をするかを実現する層
 /* 実装するクラス
 - ユースケース(アプリケーションサービス)クラス
+- CQRSの概念からだけど、QueryProcessorを配置
 - プレゼンテーション層との入出力を定義
  */
 lazy val useCase = project
-  .in(file("modules/use-case"))
-  .settings(UseCase.settings)
+  .in(file("modules/application/use-case"))
+  .settings(commonSettings, testSettings)
+  .settings(
+    name := "use-case",
+    libraryDependencies ++= Seq(
+        Modules.typeSafe.config
+      )
+  )
   .dependsOn(domain % compileAndTest)
+
+// CQRSの概念からだけど、Domainに依存しないDAO 検索のみを担う
+// 永続化時の検証時に使いたいとかあるけど悩む
+lazy val query = project
+  .in(file("modules/application/query"))
 
 // Interface Adapters
 // 責務: 入力、永続化、表示を担当するオブジェクトの層
 /* 実装するクラス
 - implクラス
  */
-
-lazy val adaptersDBs = project
-  .in(file("modules/adaptors/dbs"))
-  .settings(DBs.settings)
+lazy val db = project
+  .in(file("modules/adaptors/gateways/db"))
+  .settings(commonSettings, testSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+        Modules.mysql,
+        Modules.skinnyOrm,
+        Modules.scalikejdbc.mapperGeneratorCore,
+        Modules.scalikejdbc.test % Test
+      )
+  )
   .dependsOn(useCase % compileAndTest)
 
-//val adaptersAPIs = project
-//  .in(file("modules/adaptors/apis"))
-//  .settings(APIs.settings)
-//  .dependsOn(domain % compileAndTest)
+val api = project
+  .in(file("modules/adaptors/presenters/api"))
+  .settings(commonSettings, testSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+        Modules.typeSafe.AkkaHttp,
+        Modules.AkkaHttpCirce
+      )
+  )
+  .dependsOn(useCase % compileAndTest)
+
+// 実際にインスタンスを持つ外部にServiceとして提供する
+lazy val web = project
+  .in(file("modules/adaptors/controllers/web"))
+  .settings(commonSettings, testSettings)
+  .dependsOn(
+    db  % compileAndTest,
+    api % compileAndTest
+  )
 
 val docs = (project in file("docs"))
   .enablePlugins(ParadoxPlugin)
 
 val aggregatedProjects = Seq[ProjectReference](
-//  infrastructure,
   core,
   domain,
   useCase,
-  adaptersDBs
-//  adaptersAPIs
+  db,
+  api,
+  web
 )
 
 val root = (project in file("."))
   .settings(disableScalaDocSettings)
   .settings(
     name := "examples-ddd-clean-architecture",
-    Global / excludeLintKeys += idePackagePrefix,
     // scalafmtAll, scalafmtSbt scalafixまとめて全部
     commands += Command.command("format") { st =>
         Command.process("scalafmtSbt; scalafmtAll; scalafixAll", st)
       }
   )
   .aggregate(aggregatedProjects: _*)
-
-//val example = project
-//  .in(file("example"))
-//  .settings(
-//    scalaVersion := "2.13.6",
-//    libraryDependencies ++= Seq(
-//      "org.scala-lang" % "scala-reflect" % scalaVersion.value
-//    )
-//  )
-//

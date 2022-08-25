@@ -1,8 +1,6 @@
 import sbt.Keys._
 import sbt._
-import sbtide.Keys.idePackagePrefix
 import scalafix.sbt.ScalafixPlugin.autoImport.{scalafixOnCompile, scalafixSemanticdb}
-//import sbtide.Keys.idePackagePrefix
 
 import java.time.format.DateTimeFormatter
 import java.time.{ZoneId, ZonedDateTime}
@@ -20,7 +18,7 @@ object Dependencies {
     Compile / packageDoc / publishArtifact := false
   )
 
-  object Dependencies {
+  object Modules {
     // Core
     val googleDiff: ModuleID = "com.googlecode.java-diff-utils" % "diffutils" % "1.3.0"
 
@@ -37,38 +35,26 @@ object Dependencies {
     }
 
     object typeSafe {
-      val config: ModuleID = "com.typesafe" % "config" % "1.4.2"
+      val config: ModuleID   = "com.typesafe"       % "config"    % "1.4.2"
+      val AkkaHttp: ModuleID = "com.typesafe.akka" %% "akka-http" % "10.2.9"
     }
 
-  }
-  object Versions {
-    val scala2 = "2.13.8"
-    val scala3 = "3.1.2"
+    val AkkaHttpCirce: ModuleID = "de.heikoseeberger" %% "akka-http-circe" % "1.39.2"
 
-    // Front関係
-    val akkaHttp      = "10.2.9"
-    val akkaHttpCirce = "1.39.2"
+    val CatsCore: ModuleID = "org.typelevel" %% "cats-core" % "2.8.0"
 
-    // RDS関係
-    val skinny      = "4.0.0"
-    val mysql       = "8.0.29"
-    val scalikeJDBC = "4.0.0"
+    val Enumeratum: ModuleID = "com.beachape" %% "enumeratum" % "1.7.0"
 
-    val typeSafeConfig = "1.4.2"
+    val ScalaTest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.12"
 
-    val logbackClassic = "1.2.11"
-    val enumeratum     = "1.7.0" // enumの拡張
+    val LogbackClassic: ModuleID = "ch.qos.logback" % "logback-classic" % "1.2.11"
 
-    val scalaTest = "3.2.12"
-
-    val cats = "2.7.0"
   }
 
   val commonSettings: SettingsDefinition = Seq(
     organization := "com.kokodayo",
-    scalaVersion := Versions.scala2,
+    scalaVersion := "2.13.8",
     version := "1.0.0",
-    idePackagePrefix := Some("com.example"),
     scalacOptions := Seq(
         "-deprecation",
         "-feature",
@@ -81,9 +67,9 @@ object Dependencies {
     semanticdbVersion := scalafixSemanticdb.revision,
     // scalafixで追加 <--
     libraryDependencies ++= Seq(
-        "org.typelevel" %% "cats-core"  % Versions.cats,
-        "com.typesafe"   % "config"     % Versions.typeSafeConfig,
-        "com.beachape"  %% "enumeratum" % Versions.enumeratum
+        Modules.CatsCore,
+        Modules.typeSafe.config,
+        Modules.Enumeratum
       ),
     Test / javaOptions ++= Seq(
         "-Duser.timezone=GMT"
@@ -92,57 +78,10 @@ object Dependencies {
 
   val testSettings: SettingsDefinition = Seq(
     libraryDependencies ++= Seq(
-        "org.scalatest" %% "scalatest"       % Versions.scalaTest % Test,
-        "ch.qos.logback" % "logback-classic" % Versions.logbackClassic
-      ),
-    Test / javaOptions ++= Seq(
-        "-Duser.timezone=GMT"
+        Modules.ScalaTest % Test,
+        Modules.LogbackClassic
       )
   )
-
-  object Core {
-    val settings: SettingsDefinition = commonSettings ++ testSettings ++ Seq(
-        idePackagePrefix := Some("com.kokodayo.dodai"),
-        libraryDependencies ++= Seq(
-            Dependencies.googleDiff,
-            Dependencies.typeSafe.config
-          )
-      )
-  }
-
-  object Domain {
-    val settings: SettingsDefinition = commonSettings ++ testSettings ++ Seq(
-        idePackagePrefix := Some("com.example.domain")
-      )
-  }
-
-  object UseCase {
-    val settings: SettingsDefinition = commonSettings ++ testSettings ++ Seq(
-        idePackagePrefix := Some("com.example.usecase")
-      )
-  }
-
-  object DBs {
-    val settings: SettingsDefinition = commonSettings ++ testSettings ++ Seq(
-        idePackagePrefix := Some("com.example.adaptors.dbs"),
-        libraryDependencies ++= Seq(
-            Dependencies.mysql,
-            Dependencies.skinnyOrm,
-            Dependencies.scalikejdbc.mapperGeneratorCore,
-            Dependencies.scalikejdbc.test % Test
-          )
-      )
-  }
-
-  object APIs {
-    val settings: SettingsDefinition = commonSettings ++ testSettings ++ Seq(
-        idePackagePrefix := Some("com.example.adaptors.apis"),
-        libraryDependencies ++= Seq(
-            "com.typesafe.akka" %% "akka-http"       % Versions.akkaHttp,
-            "de.heikoseeberger" %% "akka-http-circe" % Versions.akkaHttpCirce
-          )
-      )
-  }
 
   // サンプル
   //  libraryDependencies ++= {
