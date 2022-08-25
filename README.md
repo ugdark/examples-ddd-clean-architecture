@@ -1,5 +1,8 @@
 # examples-ddd-clean-architecture
 
+## 次やること
+- [x] projectの構成変更 [ADR](docs/src/main/paradox/pages/adr/アーキテクチャについて.md)
+- [ ] validatorを実装　[ADR](docs/src/main/paradox/pages/adr/入力チェックについて.md)
 
 ## 忘れそうなんで
 

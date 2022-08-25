@@ -72,8 +72,10 @@ object Dependencies {
         Modules.Enumeratum
       ),
     Test / javaOptions ++= Seq(
-        "-Duser.timezone=GMT"
-      )
+        "-Duser.timezone=UTC"
+      ),
+    Test / parallelExecution := true, // 明示的にtrueにしてる
+    Test / fork := true               // Test / javaOptions が効かないのでtrue
   )
 
   val testSettings: SettingsDefinition = Seq(
