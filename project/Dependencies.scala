@@ -56,10 +56,11 @@ object Dependencies {
     scalaVersion := "2.13.8",
     version := "1.0.0",
     scalacOptions := Seq(
-        "-deprecation",
-        "-feature",
-        "-Ywarn-unused",
-        "-Xlint:unused"
+        "-deprecation", // @deprecated なAPIが使われている箇所を警告します
+        "-feature",     //  langauge feature の import が必要な箇所を警告します
+        "-unchecked",
+        "-Xlint" // 警告もりもり
+        // "-Xfatal-warnings" // Xlintのwarningをerrorとしちゃう testを書いてる時とか面倒なんで
       ),
     // scalafixで追加 -->
     semanticdbEnabled := true,
