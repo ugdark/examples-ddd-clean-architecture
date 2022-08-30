@@ -2,13 +2,16 @@ package com.kokodayo.dodai.print
 
 object PrettyPrint {
 
-  /** { https://gist.github.com/carymrobbins/7b8ed52cd6ea186dbdf8 }
-    * Pretty prints a Scala value similar to its source represention.
-    * Particularly useful for case classes.
-    * @param a - The value to pretty print.
-    * @param indentSize - Number of spaces for each indent.
-    * @param maxElementWidth - Largest element size before wrapping.
-    * @param depth - Initial depth to pretty print indents.
+  /** { https://gist.github.com/carymrobbins/7b8ed52cd6ea186dbdf8 } Pretty prints a Scala value similar to its source
+    * represention. Particularly useful for case classes.
+    * @param a
+    *   \- The value to pretty print.
+    * @param indentSize
+    *   \- Number of spaces for each indent.
+    * @param maxElementWidth
+    *   \- Largest element size before wrapping.
+    * @param depth
+    *   \- Initial depth to pretty print indents.
     * @return
     */
   def print(

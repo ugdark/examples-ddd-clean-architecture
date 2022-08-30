@@ -6,11 +6,7 @@ trait Enum[A <: EnumColumn] {
 
   val values: Seq[A]
 
-  /**
-    * 初期値はvaluesのheadになるので変更が必要なら
-    * {{{ override lazy val defaultValue: A = Enum }}}
-    * してください
-    * 全域関数になっていないことに注意
+  /** 初期値はvaluesのheadになるので変更が必要なら {{{override lazy val defaultValue: A = Enum}}} してください 全域関数になっていないことに注意
     */
   lazy val defaultValue: A = values.head
 

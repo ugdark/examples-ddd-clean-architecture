@@ -5,9 +5,7 @@ import com.example.domain.{EntityMetaData, EntityMetaDataCreator, InvalidError, 
 
 import scala.util.control.NonFatal
 
-/**
-  * Domainの制約を入力Errorとして取り扱うためのクラス
-  * catsのValid以上に簡易な作りがちょっとできなかったので今はcatsに依存させる
+/** Domainの制約を入力Errorとして取り扱うためのクラス catsのValid以上に簡易な作りがちょっとできなかったので今はcatsに依存させる
   */
 object UserValidator {
 

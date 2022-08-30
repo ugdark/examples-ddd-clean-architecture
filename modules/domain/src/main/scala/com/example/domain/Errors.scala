@@ -8,16 +8,15 @@ trait DomainError {
 
 trait RepositoryError extends DomainError
 
-/**
-  * 永続化層のErrorをまとめる。
-  * 業務に依存するErrorの定義はしない
+/** 永続化層のErrorをまとめる。 業務に依存するErrorの定義はしない
   */
 object RepositoryError {
 
-  /**
-    * 楽観ロックErrorを格納する
-    * @param message メッセージ
-    * @param cause DBからのErrorを格納
+  /** 楽観ロックErrorを格納する
+    * @param message
+    *   メッセージ
+    * @param cause
+    *   DBからのErrorを格納
     */
   case class OptimisticLockError(message: String, cause: Option[Throwable] = None) extends RepositoryError
 
@@ -29,14 +28,14 @@ final case class InvalidError(message: String, cause: Option[Throwable] = None) 
 // 存在しない場合をエラーとする場合
 final case class NotFoundError(message: String, cause: Option[Throwable] = None) extends DomainError
 
-/**
-  * 想定外のAdaptor層のError格納
-  * @param message メッセージ
-  * @param cause Errorを格納
+/** 想定外のAdaptor層のError格納
+  * @param message
+  *   メッセージ
+  * @param cause
+  *   Errorを格納
   */
 case class AdaptorError(message: String, cause: Option[Throwable] = None) extends DomainError
 
-/**
-  * 想定外のIOCSetting
+/** 想定外のIOCSetting
   */
 case class UnexpectedContextError(message: String, cause: Option[Throwable] = None) extends DomainError
