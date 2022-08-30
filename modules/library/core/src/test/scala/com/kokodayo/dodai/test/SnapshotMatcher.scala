@@ -59,9 +59,7 @@ trait SnapshotLoader {
 
   //  private def filePath(id: String): String = new File(s"$folderPath/$id.snap").getAbsolutePath
   private def filePath(id: String): String =
-    new File(
-      s"$folderPath/${getClass.getName.split("\\.").last}-$id.snap"
-    ).getAbsolutePath
+    new File(s"$folderPath/${getClass.getName.split("\\.").last}-$id.snap").getAbsolutePath
 
   def loadSnapshot(id: String): Option[String] =
     Try {
@@ -71,7 +69,7 @@ trait SnapshotLoader {
     }.toOption
 
   def writeSnapshot[T](id: String, content: T, isEscape: Boolean = true)(implicit
-      s: SnapshotSerializer[T]
+    s: SnapshotSerializer[T]
   ): Unit = {
     new File(folderPath).mkdirs()
 
@@ -105,10 +103,7 @@ trait SnapshotMessages {
     s"Snapshot [$key] was not generated due to Environment flag."
 
   def errorMessage(current: String, found: String): String = {
-    val patch = DiffUtils.diff(
-      found.split("\n").toList.asJava,
-      current.split("\n").toList.asJava
-    )
+    val patch = DiffUtils.diff(found.split("\n").toList.asJava, current.split("\n").toList.asJava)
     val diff = DiffUtils
       .generateUnifiedDiff(
         "Original Snapshot",
@@ -134,7 +129,11 @@ trait SnapshotMessages {
   }
 }
 
-trait SnapshotMatcher extends SnapshotLoader with SnapshotMessages with TestDataArgs with DefaultSerializers {
+trait SnapshotMatcher
+    extends SnapshotLoader
+    with SnapshotMessages
+    with TestDataArgs
+    with DefaultSerializers {
   self: FixtureTestSuite =>
 
   private var testMap: Map[String, Int] = Map.empty
@@ -153,19 +152,16 @@ trait SnapshotMatcher extends SnapshotLoader with SnapshotMessages with TestData
       )
   }
 
-  class SnapshotShouldMatch[T](
-      explicitId: Option[String],
-      isEscape: Boolean = true
-  )(implicit s: SnapshotSerializer[T], test: TestData)
-      extends Matcher[T]
+  class SnapshotShouldMatch[T](explicitId: Option[String], isEscape: Boolean = true)(implicit
+    s: SnapshotSerializer[T],
+    test: TestData
+  ) extends Matcher[T]
       with TestDataEnhancer {
     override def apply(left: T): MatchResult = {
       // val testIdentifier = getCurrentAndSetNext(explicitId.getOrElse(test.key), isExplicit = explicitId.nonEmpty)
       // 日本語対応するため
-      val testIdentifier = getCurrentAndSetNext(
-        explicitId.getOrElse(test.name),
-        isExplicit = explicitId.nonEmpty
-      )
+      val testIdentifier =
+        getCurrentAndSetNext(explicitId.getOrElse(test.name), isExplicit = explicitId.nonEmpty)
       loadSnapshot(testIdentifier) match {
         case Some(content) if isEqual(content, left, isEscape) =>
           MatchResult(matches = true, DefaultError, ContentsAreEqual)
@@ -190,27 +186,21 @@ trait SnapshotMatcher extends SnapshotLoader with SnapshotMessages with TestData
       else left.toString == content
   }
 
-  def matchSnapshot[T]()(implicit
-      s: SnapshotSerializer[T],
-      test: TestData
-  ): Matcher[T] =
+  def matchSnapshot[T]()(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
     new SnapshotShouldMatch[T](None)
 
   // ファイル名を変更したい場合に使用
   def matchSnapshot[T](
-      explicitId: String
+    explicitId: String
   )(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
     new SnapshotShouldMatch[T](Option(explicitId))
 
-  def matchSnapshotNoEscape[T]()(implicit
-      s: SnapshotSerializer[T],
-      test: TestData
-  ): Matcher[T] =
+  def matchSnapshotNoEscape[T]()(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
     new SnapshotShouldMatch[T](None, isEscape = false)
 
   // ファイル名を変更したい場合に使用
   def matchSnapshotNoEscape[T](
-      explicitId: String
+    explicitId: String
   )(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
     new SnapshotShouldMatch[T](Option(explicitId), isEscape = false)
 

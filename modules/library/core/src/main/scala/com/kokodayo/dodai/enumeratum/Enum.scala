@@ -6,7 +6,8 @@ trait Enum[A <: EnumColumn] {
 
   val values: Seq[A]
 
-  /** 初期値はvaluesのheadになるので変更が必要なら {{{override lazy val defaultValue: A = Enum}}} してください 全域関数になっていないことに注意
+  /** 初期値はvaluesのheadになるので変更が必要なら {{{override lazy val defaultValue: A = Enum}}} してください
+    * 全域関数になっていないことに注意
     */
   lazy val defaultValue: A = values.head
 
@@ -19,8 +20,9 @@ trait Enum[A <: EnumColumn] {
       throw new IllegalArgumentException(s"`$keyword` is not $getSimpleName text.")
     }
 
-  def find(id: Int): Option[A]         = values.find(_.id == id)
-  def find(keyword: String): Option[A] = values.find(_.keyword.toLowerCase == keyword.toLowerCase)
+  def find(id: Int): Option[A] = values.find(_.id == id)
+  def find(keyword: String): Option[A] =
+    values.find(_.keyword.toLowerCase == keyword.toLowerCase)
 
   private def getSimpleName: String = getClass.getSimpleName.replace("$", "")
 
@@ -28,12 +30,11 @@ trait Enum[A <: EnumColumn] {
 
   def orDefault(keyword: String): A = find(keyword).getOrElse(defaultValue)
 
-  def orDefault[T](keyOpt: Option[T]): A = {
+  def orDefault[T](keyOpt: Option[T]): A =
     keyOpt match {
       case Some(value: String) => orDefault(value)
       case Some(value: Int)    => orDefault(value)
       case _                   => defaultValue
     }
-  }
 
 }

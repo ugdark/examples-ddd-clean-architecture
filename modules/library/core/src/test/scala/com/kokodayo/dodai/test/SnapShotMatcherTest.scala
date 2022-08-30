@@ -14,11 +14,11 @@ class SnapShotMatcherTest extends FixtureAnyFunSpec with Matchers with SnapshotM
   private case class Hoge(fuga: Fuga)
 
   private case class User(
-      name: String = "nishiyama",
-      message: String = "hoge",
-      school: School = School("本郷小学校"),
-      club: Club = Club("野球部"),
-      hoge: Hoge = Hoge(Fuga("moge"))
+    name: String = "nishiyama",
+    message: String = "hoge",
+    school: School = School("本郷小学校"),
+    club: Club = Club("野球部"),
+    hoge: Hoge = Hoge(Fuga("moge"))
   )
 
   describe("スナップショットを取る") {
@@ -33,30 +33,26 @@ class SnapShotMatcherTest extends FixtureAnyFunSpec with Matchers with SnapshotM
       it("optionのsnapShotを取る") { implicit test =>
         // prettyPrint case opt: Some[?] 追加
         // これいれないと Some(yamada)などダブルクオートがなくなるんで
-        val user: Map[String, Any] = Map(
-          "user" -> Map(
-            "id"   -> 1,
-            "name" -> Some("yamada"),
-            "child" -> Map(
-              "id"   -> 2,
-              "name" -> None
+        val user: Map[String, Any] =
+          Map(
+            "user" -> Map(
+              "id"    -> 1,
+              "name"  -> Some("yamada"),
+              "child" -> Map("id" -> 2, "name" -> None)
             )
           )
-        )
         user should matchSnapshot()
       }
 
       it("mapのsnapShotを取る") { implicit test =>
-        val user: Map[String, Any] = Map(
-          "user" -> Map(
-            "id"   -> 1,
-            "name" -> "yamada",
-            "child" -> Map(
-              "id"   -> 2,
-              "name" -> "hana"
+        val user: Map[String, Any] =
+          Map(
+            "user" -> Map(
+              "id"    -> 1,
+              "name"  -> "yamada",
+              "child" -> Map("id" -> 2, "name" -> "hana")
             )
           )
-        )
         user should matchSnapshot()
       }
 

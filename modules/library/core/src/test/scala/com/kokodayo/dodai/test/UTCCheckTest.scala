@@ -15,7 +15,9 @@ class UTCCheckTest extends AnyFunSpec with Matchers {
     LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
     // 秒以下は削りたいので
-    formatter.format(LocalDateTime.now()) shouldBe formatter.format(LocalDateTime.now(ZoneId.of("UTC")))
+    formatter.format(LocalDateTime.now()) shouldBe formatter.format(
+      LocalDateTime.now(ZoneId.of("UTC"))
+    )
   }
 
 }

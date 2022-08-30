@@ -7,10 +7,11 @@ import scala.collection.Seq
 
 class EnumTest extends AnyFunSpec with Matchers {
 
-  sealed abstract class EnumColumnImpl(override val id: Int, override val name: String) extends EnumColumn
+  sealed abstract class EnumColumnImpl(override val id: Int, override val name: String)
+      extends EnumColumn
 
-  private final case object EnumColumn1 extends EnumColumnImpl(1, "1")
-  private final case object EnumColumn2 extends EnumColumnImpl(2, "2")
+  final private case object EnumColumn1 extends EnumColumnImpl(1, "1")
+  final private case object EnumColumn2 extends EnumColumnImpl(2, "2")
 
   private object EnumImpl extends Enum[EnumColumnImpl] {
     val values: Seq[EnumColumnImpl] = Seq(EnumColumn1, EnumColumn2)

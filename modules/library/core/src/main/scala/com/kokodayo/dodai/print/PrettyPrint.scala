@@ -2,8 +2,8 @@ package com.kokodayo.dodai.print
 
 object PrettyPrint {
 
-  /** { https://gist.github.com/carymrobbins/7b8ed52cd6ea186dbdf8 } Pretty prints a Scala value similar to its source
-    * represention. Particularly useful for case classes.
+  /** { https://gist.github.com/carymrobbins/7b8ed52cd6ea186dbdf8 } Pretty prints a Scala value
+    * similar to its source represention. Particularly useful for case classes.
     * @param a
     *   \- The value to pretty print.
     * @param indentSize
@@ -14,12 +14,7 @@ object PrettyPrint {
     *   \- Initial depth to pretty print indents.
     * @return
     */
-  def print(
-      a: Any,
-      indentSize: Int = 2,
-      maxElementWidth: Int = 30,
-      depth: Int = 0
-  ): String = {
+  def print(a: Any, indentSize: Int = 2, maxElementWidth: Int = 30, depth: Int = 0): String = {
     val indent      = " " * depth * indentSize
     val fieldIndent = indent + (" " * indentSize)
     val thisDepth   = print(_: Any, indentSize, maxElementWidth, depth)
@@ -27,13 +22,10 @@ object PrettyPrint {
     a match {
       // Make Strings look similar to their literal form.
       case s: String =>
-        val replaceMap = Seq(
-          "\n" -> "\\n",
-          "\r" -> "\\r",
-          "\t" -> "\\t",
-          "\"" -> "\\\""
-        )
-        val replace = replaceMap.foldLeft(s) { case (acc, (c, r)) => acc.replace(c, r) }
+        val replaceMap = Seq("\n" -> "\\n", "\r" -> "\\r", "\t" -> "\\t", "\"" -> "\\\"")
+        val replace = replaceMap.foldLeft(s) { case (acc, (c, r)) =>
+          acc.replace(c, r)
+        }
         s""""$replace""""
       case opt: Some[_] =>
         val resultOneLine = s"Some(${nextDepth(opt.get)})"
@@ -52,13 +44,17 @@ object PrettyPrint {
       case map: Map[_, _] if map.isEmpty =>
         map.toString()
       case xs: Map[_, _] =>
-        val result = xs.map { case (key, value) => s"\n$fieldIndent${nextDepth(key)} -> ${nextDepth(value)}" }.toString
-        "Map" + s"${result.substring(0, result.length - 1)}\n$indent)".substring(4)
+        val result = xs.map { case (key, value) =>
+          s"\n$fieldIndent${nextDepth(key)} -> ${nextDepth(value)}"
+        }.toString
+        "Map" + s"${result.substring(0, result.length - 1)}\n$indent)"
+          .substring(4)
       case p: Product =>
         val prefix = p.productPrefix
         // We'll use reflection to get the constructor arg names and values.
-        val cls    = p.getClass
-        val fields = cls.getDeclaredFields.filterNot(_.isSynthetic).map(_.getName)
+        val cls = p.getClass
+        val fields =
+          cls.getDeclaredFields.filterNot(_.isSynthetic).map(_.getName)
         val values = p.productIterator.toSeq
         // If we weren't able to match up fields/values, fall back to toString.
         if (fields.length != values.length) return p.toString
@@ -69,7 +65,9 @@ object PrettyPrint {
           case (_, value) :: Nil => s"$prefix(${thisDepth(value)})"
           // If there is more than one field, build up the field names and values.
           case kvps =>
-            val prettyFields = kvps.map { case (k, v) => s"$fieldIndent$k = ${nextDepth(v)}" }
+            val prettyFields = kvps.map { case (k, v) =>
+              s"$fieldIndent$k = ${nextDepth(v)}"
+            }
             // If the result is not too long, pretty print on one line.
             val resultOneLine = s"$prefix(${prettyFields.mkString(", ")})"
             if (resultOneLine.length <= maxElementWidth) return resultOneLine

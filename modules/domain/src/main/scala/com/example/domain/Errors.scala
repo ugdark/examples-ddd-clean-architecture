@@ -18,7 +18,8 @@ object RepositoryError {
     * @param cause
     *   DBからのErrorを格納
     */
-  case class OptimisticLockError(message: String, cause: Option[Throwable] = None) extends RepositoryError
+  case class OptimisticLockError(message: String, cause: Option[Throwable] = None)
+      extends RepositoryError
 
 }
 
@@ -38,4 +39,5 @@ case class AdaptorError(message: String, cause: Option[Throwable] = None) extend
 
 /** 想定外のIOCSetting
   */
-case class UnexpectedContextError(message: String, cause: Option[Throwable] = None) extends DomainError
+case class UnexpectedContextError(message: String, cause: Option[Throwable] = None)
+    extends DomainError

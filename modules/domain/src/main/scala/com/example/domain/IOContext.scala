@@ -6,9 +6,8 @@ import scala.concurrent.Future
   */
 trait IOContext {
 
-  def withFuture[T](body: => T): Future[T] = {
-    Future { body }(ThreadPool.default)
-  }
+  def withFuture[T](body: => T): Future[T] =
+    Future(body)(ThreadPool.default)
 
 }
 

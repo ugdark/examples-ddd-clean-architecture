@@ -7,8 +7,9 @@ trait Entity[ID <: EntityId] {
   // NOTE: 型 と ID でエンティティの同一性を判断します。
   override def equals(obj: Any): Boolean =
     obj match {
-      case that: Entity[_] => this.getClass == that.getClass && this.id == that.id
-      case _               => false
+      case that: Entity[_] =>
+        this.getClass == that.getClass && this.id == that.id
+      case _ => false
     }
 
   /* やっぱり値全比較も復活しておきたいので */

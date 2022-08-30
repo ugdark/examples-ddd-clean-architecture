@@ -6,7 +6,8 @@ import scala.util.{Success, Try}
 
 /** Test用のOnMemory共通クラス
   */
-trait TestRepositoryOnMemoryBase[Id <: domain.EntityId, E <: domain.Entity[Id]] extends RepositoryBase[Try, Id, E] {
+trait TestRepositoryOnMemoryBase[Id <: domain.EntityId, E <: domain.Entity[Id]]
+    extends RepositoryBase[Try, Id, E] {
 
   private val storage: scala.collection.mutable.LinkedHashMap[Id, E] =
     scala.collection.mutable.LinkedHashMap.empty

@@ -9,37 +9,24 @@ import scala.util.control.NonFatal
   */
 object UserValidator {
 
-  def valid(
-      _id: String,
-      _name: String
-  )(implicit
-      metaDataCreator: EntityMetaDataCreator = new EntityMetaDataCreator {
-        override def create: EntityMetaData = new EntityMetaData {}
-      }
-  ): ValidationResult[User] = {
-    (
-      validId(_id),
-      validName(_name)
-    ).mapN {
-      case (id, name) =>
-        User(
-          id = id,
-          name = name,
-          metaData = metaDataCreator.create
-        )
+  def valid(_id: String, _name: String)(implicit
+    metaDataCreator: EntityMetaDataCreator = new EntityMetaDataCreator {
+      override def create: EntityMetaData = new EntityMetaData {}
     }
-  }
+  ): ValidationResult[User] =
+    (validId(_id), validName(_name)).mapN { case (id, name) =>
+      User(id = id, name = name, metaData = metaDataCreator.create)
+    }
 
-  def validId(value: String): ValidationResult[UserId] = {
-    try {
+  def validId(value: String): ValidationResult[UserId] =
+    try
       UserId(value).valid
-    } catch {
+    catch {
       case NonFatal(ex) =>
         InvalidError(s"Invalid system user id [$value]", Some(ex)).invalidNel
     }
-  }
 
-  def validName(value: String): ValidationResult[UserName] = {
+  def validName(value: String): ValidationResult[UserName] =
     try {
       val maxLength = 20
       require(value.nonEmpty && value.length <= maxLength)
@@ -48,6 +35,5 @@ object UserValidator {
       case NonFatal(ex) =>
         InvalidError(s"Invalid system user name [$value]", Some(ex)).invalidNel
     }
-  }
 
 }

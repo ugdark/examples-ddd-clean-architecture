@@ -6,12 +6,7 @@ val compileAndTest: String = "compile->compile;test->test"
 lazy val core = project
   .in(file("modules/library/core"))
   .settings(commonSettings, testSettings)
-  .settings(
-    libraryDependencies ++= Seq(
-        Modules.googleDiff,
-        Modules.typeSafe.config
-      )
-  )
+  .settings(libraryDependencies ++= Seq(Modules.googleDiff, Modules.typeSafe.config))
 
 // Enterprise Business Rules (Entities)
 // 責務: ドメイン知識を定義する層,他の層に依存しない事
@@ -26,11 +21,7 @@ lazy val core = project
 lazy val domain = project
   .in(file("modules/domain"))
   .settings(commonSettings, testSettings)
-  .settings(
-    libraryDependencies ++= Seq(
-        Modules.typeSafe.config
-      )
-  )
+  .settings(libraryDependencies ++= Seq(Modules.typeSafe.config))
   .dependsOn(core % compileAndTest)
 
 // Application Business Rules (Use Cases)
@@ -44,12 +35,7 @@ lazy val domain = project
 lazy val useCase = project
   .in(file("modules/application/use-case"))
   .settings(commonSettings, testSettings)
-  .settings(
-    name := "use-case",
-    libraryDependencies ++= Seq(
-        Modules.typeSafe.config
-      )
-  )
+  .settings(name := "use-case", libraryDependencies ++= Seq(Modules.typeSafe.config))
   .dependsOn(domain % compileAndTest)
 
 // CQRSの概念からだけど、Domainに依存しないDAO 検索のみを担う
@@ -67,45 +53,30 @@ lazy val db = project
   .settings(commonSettings, testSettings)
   .settings(
     libraryDependencies ++= Seq(
-        Modules.mysql,
-        Modules.skinnyOrm,
-        Modules.scalikejdbc.mapperGeneratorCore,
-        Modules.scalikejdbc.test % Test
-      )
+      Modules.mysql,
+      Modules.skinnyOrm,
+      Modules.scalikejdbc.mapperGeneratorCore,
+      Modules.scalikejdbc.test % Test
+    )
   )
   .dependsOn(useCase % compileAndTest)
 
 val api = project
   .in(file("modules/adaptors/presenters/api"))
   .settings(commonSettings, testSettings)
-  .settings(
-    libraryDependencies ++= Seq(
-        Modules.typeSafe.AkkaHttp,
-        Modules.AkkaHttpCirce
-      )
-  )
+  .settings(libraryDependencies ++= Seq(Modules.typeSafe.AkkaHttp, Modules.AkkaHttpCirce))
   .dependsOn(useCase % compileAndTest)
 
 // 実際にインスタンスを持つ外部にServiceとして提供する
 lazy val web = project
   .in(file("modules/adaptors/controllers/web"))
   .settings(commonSettings, testSettings)
-  .dependsOn(
-    db  % compileAndTest,
-    api % compileAndTest
-  )
+  .dependsOn(db % compileAndTest, api % compileAndTest)
 
 val docs = (project in file("docs"))
   .enablePlugins(ParadoxPlugin)
 
-val aggregatedProjects = Seq[ProjectReference](
-  core,
-  domain,
-  useCase,
-  db,
-  api,
-  web
-)
+val aggregatedProjects = Seq[ProjectReference](core, domain, useCase, db, api, web)
 
 val root = (project in file("."))
   .settings(disableScalaDocSettings)
@@ -113,7 +84,7 @@ val root = (project in file("."))
     name := "examples-ddd-clean-architecture",
     // scalafmtAll, scalafmtSbt scalafixまとめて全部
     commands += Command.command("format") { st =>
-        Command.process("scalafmtSbt; scalafmtAll; scalafixAll", st)
-      }
+      Command.process("scalafmtSbt; scalafmtAll; scalafixAll", st)
+    }
   )
   .aggregate(aggregatedProjects: _*)
