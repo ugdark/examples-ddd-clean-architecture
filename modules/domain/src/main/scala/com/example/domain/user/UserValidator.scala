@@ -1,39 +1,47 @@
 package com.example.domain.user
 
-import cats.implicits.{catsSyntaxTuple2Semigroupal, catsSyntaxValidatedId}
-import com.example.domain.{EntityMetaData, EntityMetaDataCreator, InvalidError, ValidationResult}
+import cats.data.ValidatedNec
+import cats.implicits.{catsSyntaxTuple2Semigroupal, catsSyntaxValidatedIdBinCompat0}
+import com.example.domain.EntityMetaDataCreator
 
 import scala.util.control.NonFatal
 
 /** Domainの制約を入力Errorとして取り扱うためのクラス catsのValid以上に簡易な作りがちょっとできなかったので今はcatsに依存させる
+  * 永続化先の重複チェック等はこちらの責務としない方向ですすめる。別のクラスでラップして使う想定にする。
   */
 object UserValidator {
 
-  def valid(_id: String, _name: String)(implicit
-    metaDataCreator: EntityMetaDataCreator = new EntityMetaDataCreator {
-      override def create: EntityMetaData = new EntityMetaData {}
-    }
+  // 入力例外を表す
+  type ValidationResult[A] = ValidatedNec[UserInvalidError, A]
+
+  def valid(id: String, name: String)(implicit
+    metaDataCreator: EntityMetaDataCreator
   ): ValidationResult[User] =
-    (validId(_id), validName(_name)).mapN { case (id, name) =>
-      User(id = id, name = name, metaData = metaDataCreator.create)
+    (
+      validId(id),
+      validName(name)
+    ).mapN { case (id, name) =>
+      User(
+        id = id,
+        name = name,
+        metaData = metaDataCreator.create
+      )
     }
 
   def validId(value: String): ValidationResult[UserId] =
     try
-      UserId(value).valid
+      UserId(value).validNec
     catch {
-      case NonFatal(ex) =>
-        InvalidError(s"Invalid system user id [$value]", Some(ex)).invalidNel
+      case NonFatal(_) =>
+        UserInvalidError.Id.invalidNec
     }
 
   def validName(value: String): ValidationResult[UserName] =
-    try {
-      val maxLength = 20
-      require(value.nonEmpty && value.length <= maxLength)
-      UserName(value).valid
-    } catch {
-      case NonFatal(ex) =>
-        InvalidError(s"Invalid system user name [$value]", Some(ex)).invalidNel
+    try
+      UserName(value).validNec
+    catch {
+      case NonFatal(_) =>
+        UserInvalidError.Name.invalidNec
     }
 
 }
