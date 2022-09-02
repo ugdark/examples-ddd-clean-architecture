@@ -50,6 +50,7 @@ object Dependencies {
     val LogbackClassic: ModuleID =
       "ch.qos.logback" % "logback-classic" % "1.2.11"
 
+    val hashids: ModuleID = "org.hashids" % "hashids" % "1.0.3"
   }
 
   val commonSettings: SettingsDefinition = Seq(

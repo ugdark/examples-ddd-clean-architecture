@@ -64,10 +64,17 @@ lazy val db = project
 val api = project
   .in(file("modules/adaptors/presenters/api"))
   .settings(commonSettings, testSettings)
-  .settings(libraryDependencies ++= Seq(Modules.typeSafe.AkkaHttp, Modules.AkkaHttpCirce))
+  .settings(
+    libraryDependencies ++= Seq(
+      Modules.typeSafe.AkkaHttp,
+      Modules.AkkaHttpCirce,
+      Modules.hashids
+    )
+  )
   .dependsOn(useCase % compileAndTest)
 
 // 実際にインスタンスを持つ外部にServiceとして提供する
+// apiServiceとかにしたいかもweb分かりづらい
 lazy val web = project
   .in(file("modules/adaptors/controllers/web"))
   .settings(commonSettings, testSettings)
