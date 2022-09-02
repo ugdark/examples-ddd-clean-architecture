@@ -10,6 +10,8 @@ class DomainErrorTest extends AnyFunSpec with Matchers {
   it("挙動確認用") {
     val error = TestError
     // 大事な事はerrorを定義した行数がstackTraceに出力されてる事を確認
+    // testコマンド実行時のに調整してるのでIDEで実行だとおちるかも
+    // 無理そうならsuccessかignoreしとけばいい。
     val expected =
       """com.example.domain.DomainErrorTest$TestError$
         |  at com.example.domain.DomainErrorTest.TestError$lzycompute$1(DomainErrorTest.scala:8)
@@ -47,21 +49,14 @@ class DomainErrorTest extends AnyFunSpec with Matchers {
         |  at org.scalatest.funspec.AnyFunSpecLike.run(AnyFunSpecLike.scala:564)
         |  at org.scalatest.funspec.AnyFunSpecLike.run$(AnyFunSpecLike.scala:563)
         |  at org.scalatest.funspec.AnyFunSpec.run(AnyFunSpec.scala:1631)
-        |  at org.scalatest.tools.SuiteRunner.run(SuiteRunner.scala:47)
-        |  at org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13(Runner.scala:1321)
-        |  at org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13$adapted(Runner.scala:1315)
-        |  at scala.collection.immutable.List.foreach(List.scala:333)
-        |  at org.scalatest.tools.Runner$.doRunRunRunDaDoRunRun(Runner.scala:1315)
-        |  at org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24(Runner.scala:992)
-        |  at org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24$adapted(Runner.scala:970)
-        |  at org.scalatest.tools.Runner$.withClassLoaderAndDispatchReporter(Runner.scala:1481)
-        |  at org.scalatest.tools.Runner$.runOptionallyWithPassFailReporter(Runner.scala:970)
-        |  at org.scalatest.tools.Runner$.run(Runner.scala:798)
-        |  at org.scalatest.tools.Runner.run(Runner.scala)
-        |  at org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.runScalaTest2or3(ScalaTestRunner.java:38)
-        |  at org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.main(ScalaTestRunner.java:25)
+        |  at org.scalatest.tools.Framework.org$scalatest$tools$Framework$$runSuite(Framework.scala:321)
+        |  at org.scalatest.tools.Framework$ScalaTestTask.execute(Framework.scala:516)
+        |  at sbt.ForkMain$Run.lambda$runTest$1(ForkMain.java:413)
+        |  at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+        |  at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+        |  at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+        |  at java.base/java.lang.Thread.run(Thread.java:832)
         |    """.stripMargin
-
     error.toString shouldBe expected
   }
 

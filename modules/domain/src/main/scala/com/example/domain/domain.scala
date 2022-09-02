@@ -45,54 +45,42 @@ trait EntityMetaDataCreator {
   def create: EntityMetaData
 }
 
+trait DomainEvent
+
+trait DomainEventError
+
+trait DomainError {
+
+  protected val stackTrace: Array[StackTraceElement] = {
+    val traces = Thread.currentThread().getStackTrace
+    traces.drop(traces.lastIndexWhere(t => t.getClassName == getClass.getName) + 1)
+  }
+
+  override def toString: String =
+    s"""${getClass.getName}
+       |${stackTrace.map(s => s"  at $s").mkString("\n")}
+    """.stripMargin
+}
+
+// ------------------
+/*
+  Validation関係(入力チェック)
+ */
+// ------------------
+
+trait Validator[T, VO] {
+
+  def valid(value: T): ValidationResult[VO]
+}
+
+//trait ValueValidation[T] extends Any with Value[T] with Validation
+
 // 入力例外を表す
 trait InvalidError {
   val message: String
-  val cause: Option[Throwable] = None
+//  val cause: Option[Throwable] = None
 }
 
 /** Domain層ですべての入力チェック担う用にするのでこちらで定義してる。
   */
 case class ValidatedError(invalids: Seq[InvalidError]) extends DomainError
-
-//trait DomainError {
-//  val message: String
-//  val code: String = getClass.getSimpleName.replace("$", "")
-//  val cause: Option[Throwable]
-//}
-//
-//trait RepositoryError extends DomainError
-//
-///** 永続化層のErrorをまとめる。 業務に依存するErrorの定義はしない
-//  */
-//object RepositoryError {
-//
-//  /** 楽観ロックErrorを格納する
-//    * @param message
-//    *   メッセージ
-//    * @param cause
-//    *   DBからのErrorを格納
-//    */
-//  case class OptimisticLockError(message: String, cause: Option[Throwable] = None)
-//      extends RepositoryError
-//
-//}
-//
-//// 入力例外を取り扱う
-//final case class InvalidError(message: String, cause: Option[Throwable] = None) extends DomainError
-//
-//// 存在しない場合をエラーとする場合
-//final case class NotFoundError(message: String, cause: Option[Throwable] = None) extends DomainError
-//
-///** 想定外のAdaptor層のError格納
-//  * @param message
-//  *   メッセージ
-//  * @param cause
-//  *   Errorを格納
-//  */
-//case class AdaptorError(message: String, cause: Option[Throwable] = None) extends DomainError
-//
-///** 想定外のIOCSetting
-//  */
-//case class UnexpectedContextError(message: String, cause: Option[Throwable] = None)
-//    extends DomainError

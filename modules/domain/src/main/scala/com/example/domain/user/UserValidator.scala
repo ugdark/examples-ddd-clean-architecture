@@ -1,47 +1,45 @@
 package com.example.domain.user
 
-import cats.data.ValidatedNec
 import cats.implicits.{catsSyntaxTuple2Semigroupal, catsSyntaxValidatedIdBinCompat0}
-import com.example.domain.EntityMetaDataCreator
+import com.example.domain
+import com.example.domain.{EntityMetaData, Validator}
 
 import scala.util.control.NonFatal
 
-/** Domainの制約を入力Errorとして取り扱うためのクラス catsのValid以上に簡易な作りがちょっとできなかったので今はcatsに依存させる
-  * 永続化先の重複チェック等はこちらの責務としない方向ですすめる。別のクラスでラップして使う想定にする。
-  */
-object UserValidator {
-
-  // 入力例外を表す
-  type ValidationResult[A] = ValidatedNec[UserInvalidError, A]
-
-  def valid(id: String, name: String)(implicit
-    metaDataCreator: EntityMetaDataCreator
-  ): ValidationResult[User] =
+protected[user] trait UserValidator {
+  def valid(
+    id: String,
+    name: String,
+    metaData: EntityMetaData
+  ): domain.ValidationResult[User] =
     (
-      validId(id),
-      validName(name)
+      UserId.valid(id),
+      UserName.valid(name)
     ).mapN { case (id, name) =>
       User(
         id = id,
         name = name,
-        metaData = metaDataCreator.create
+        metaData = metaData
       )
     }
+}
 
-  def validId(value: String): ValidationResult[UserId] =
+protected[user] trait UserIdValidator extends Validator[String, UserId] {
+  override def valid(value: String): domain.ValidationResult[UserId] =
     try
       UserId(value).validNec
     catch {
       case NonFatal(_) =>
         UserInvalidError.Id.invalidNec
     }
+}
 
-  def validName(value: String): ValidationResult[UserName] =
+protected[user] trait UserNameValidator extends Validator[String, UserName] {
+  override def valid(value: String): domain.ValidationResult[UserName] =
     try
       UserName(value).validNec
     catch {
       case NonFatal(_) =>
         UserInvalidError.Name.invalidNec
     }
-
 }

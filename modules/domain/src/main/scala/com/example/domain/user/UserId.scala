@@ -4,7 +4,7 @@ import com.example.domain.{EntityId, EntityIdGenerator}
 
 case class UserId(value: String) extends AnyVal with EntityId
 
-object UserId extends (String => UserId) {
+object UserId extends (String => UserId) with UserIdValidator {
   def apply(value: String): UserId = {
     require(value != null && value.length <= UserId.MaxLength && value.nonEmpty)
     new UserId(value)

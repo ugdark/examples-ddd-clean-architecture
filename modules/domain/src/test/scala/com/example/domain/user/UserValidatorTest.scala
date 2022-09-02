@@ -2,40 +2,35 @@ package com.example.domain.user
 
 import cats.data.Chain
 import cats.data.Validated.Invalid
-import com.example.domain.{EntityMetaData, EntityMetaDataCreator}
+import com.example.domain.EntityMetaData
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
 class UserValidatorTest extends AnyFunSpec with Matchers {
 
-  private val userValidator = UserValidator
-  implicit private val metaDataCreator: EntityMetaDataCreator = new EntityMetaDataCreator {
-    override def create: EntityMetaData = new EntityMetaData {}
-  }
-
   describe("UserValidatorTest") {
     describe("UserId") {
+      val userIdValidator = new UserIdValidator() {}
 
       it("必須入力") {
-        userValidator.validId("") shouldBe Invalid(Chain(UserInvalidError.Id))
+        userIdValidator.valid("") shouldBe Invalid(Chain(UserInvalidError.Id))
       }
 
       it("長さ確認") {
-        userValidator.validId(scala.util.Random.alphanumeric.take(21).mkString) shouldBe Invalid(
+        userIdValidator.valid(scala.util.Random.alphanumeric.take(21).mkString) shouldBe Invalid(
           Chain(UserInvalidError.Id)
         )
       }
     }
 
-    // Idと今同じにしてるので省く
-    // it("should validName") {}
-
     describe("Entityの検証") {
+      val userValidator = new UserValidator() {}
 
       it("2つの要素に対してエラーが出力される事") {
         userValidator.valid(
           scala.util.Random.alphanumeric.take(21).mkString,
-          scala.util.Random.alphanumeric.take(21).mkString
+          scala.util.Random.alphanumeric.take(21).mkString,
+          new EntityMetaData() {}
         ) shouldBe Invalid(
           Chain(
             UserInvalidError.Id,
