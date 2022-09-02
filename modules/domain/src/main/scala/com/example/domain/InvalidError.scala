@@ -6,6 +6,10 @@ trait InvalidError {
   val cause: Option[Throwable] = None
 }
 
+/** Domain層ですべての入力チェック担う用にするのでこちらで定義してる。
+  */
+case class ValidatedError(invalids: Seq[InvalidError]) extends DomainError
+
 //trait DomainError {
 //  val message: String
 //  val code: String = getClass.getSimpleName.replace("$", "")
