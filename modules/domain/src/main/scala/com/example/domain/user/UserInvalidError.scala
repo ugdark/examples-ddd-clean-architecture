@@ -21,4 +21,9 @@ object UserInvalidError {
     override val message: String = s"${MessagePrefix}名前は${UserName.MaxLength}文字以内です。"
   }
 
+  case object Password extends UserInvalidError with InvalidError {
+    override val message: String =
+      s"${MessagePrefix}パスワードは${UserRowPassword.MinLength}以上${UserRowPassword.MaxLength}文字以内です。"
+  }
+
 }

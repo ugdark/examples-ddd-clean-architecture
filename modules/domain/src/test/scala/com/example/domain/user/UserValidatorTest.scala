@@ -30,6 +30,7 @@ class UserValidatorTest extends AnyFunSpec with Matchers {
         userValidator.valid(
           scala.util.Random.alphanumeric.take(21).mkString,
           scala.util.Random.alphanumeric.take(21).mkString,
+          scala.util.Random.alphanumeric.take(8).mkString,
           new EntityMetaData() {}
         ) shouldBe Invalid(
           Chain(
