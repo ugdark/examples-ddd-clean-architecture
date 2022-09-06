@@ -24,7 +24,8 @@ class UserValidatorTest extends AnyFunSpec with Matchers {
     }
 
     describe("Entityの検証") {
-      val userValidator = new UserValidator() {}
+      val userValidator                                             = new UserValidator() {}
+      implicit val userRepositoryValidator: UserRepositoryValidator = UserRepositoryOnMemory
 
       it("2つの要素に対してエラーが出力される事") {
         userValidator.valid(

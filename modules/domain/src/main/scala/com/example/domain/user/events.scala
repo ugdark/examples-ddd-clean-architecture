@@ -16,5 +16,6 @@ case class UserCreated(
 case class UserEdited(
   userId: UserId,
   userName: UserName,
+  userPassword: UserPassword,
   metaData: EntityMetaData
 ) extends UserEvent

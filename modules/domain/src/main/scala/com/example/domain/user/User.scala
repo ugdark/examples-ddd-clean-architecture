@@ -3,12 +3,22 @@ package com.example.domain.user
 import cats.data.Validated
 import com.example.domain._
 
+import scala.util.Try
+
+sealed class IllegalArgumentNameAndPasswordSameException()
+    extends IllegalArgumentException("requirement name and Password same. ")
+
 case class User(
   id: UserId,
   name: UserName,
   password: UserPassword,
   metaData: EntityMetaData
-) extends Entity[UserId]
+) extends Entity[UserId] {
+
+  if (Try(UserRowPassword(name.value).generateHash == password).getOrElse(false))
+    throw new IllegalArgumentNameAndPasswordSameException()
+
+}
 
 object User {
 
@@ -18,7 +28,8 @@ object User {
   )(implicit
     idGenerator: EntityIdGenerator,
     metaDataCreator: EntityMetaDataCreator,
-    validator: UserValidator
+    validator: UserValidator,
+    repositoryValidator: UserRepositoryValidator
   ): Either[ValidatedError, DomainResult[UserEvent, User]] = {
 
     val newId = UserId.newId

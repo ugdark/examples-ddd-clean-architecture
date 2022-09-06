@@ -1,5 +1,6 @@
 package com.example.domain.user
 
+import com.example.domain.{DomainResult, EntityIdGenerator, EntityMetaData, EntityMetaDataCreator}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -13,18 +14,36 @@ class UserTest extends AnyFunSpec with Matchers {
       user should not be user2
     }
 
-    it("比較する") {
-      val user = UserFixture.generate()
-      // idでの比較になるのでtrue
-      user === user.copy(name = UserName("name")) shouldBe true
-      user == user.copy(name = UserName("name")) shouldBe true
-      user.equals(user.copy(name = UserName("name"))) shouldBe true
-    }
+    it("検証作成する") {
+      implicit val idGenerator: EntityIdGenerator = new EntityIdGenerator() {
+        override def generate(): String = "123"
+      }
+      implicit val metaDataCreator: EntityMetaDataCreator = new EntityMetaDataCreator() {
+        override def create: EntityMetaData = EntityMetaData.Empty
+      }
+      implicit val userValidator: UserValidator                     = new UserValidator {}
+      implicit val userRepositoryValidator: UserRepositoryValidator = UserRepositoryOnMemory
 
-    it("object比較する") {
-      val user = UserFixture.generate()
-      // 値も含んで比較するのでfalse
-      user.equalsValue(user.copy(name = UserName("name"))) shouldBe false
+      val user = User.create(
+        name = "test",
+        password = "password"
+      )
+      user shouldBe Right(
+        DomainResult(
+          UserCreated(
+            userId = UserId("123"),
+            userName = UserName("test"),
+            userPassword = UserRowPassword("password").generateHash,
+            metaData = EntityMetaData.Empty
+          ),
+          User(
+            id = UserId("123"),
+            name = UserName("test"),
+            password = UserRowPassword("password").generateHash,
+            metaData = EntityMetaData.Empty
+          )
+        )
+      )
     }
 
   }
