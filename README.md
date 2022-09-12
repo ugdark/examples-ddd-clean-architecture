@@ -21,8 +21,20 @@ $ docker-compose up -d
 ### migration
 
 ```sh
-docker-compose run --rm flyway -configFiles=conf/development.conf migrate
+./bin/flyway.sh development migrate 
+./bin/flyway.sh test migrate 
 ```
+
+```sh
+./bin/flyway.sh development clean 
+./bin/flyway.sh test clean 
+```
+
+```sh
+./bin/flyway.sh development info 
+./bin/flyway.sh test info 
+```
+
 
 ### 参考
 
