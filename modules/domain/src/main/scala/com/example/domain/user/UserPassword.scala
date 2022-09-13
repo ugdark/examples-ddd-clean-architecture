@@ -4,6 +4,15 @@ import com.example.domain.Value
 
 case class UserPassword(value: String) extends AnyVal with Value[String]
 
+object UserPassword extends (String => UserPassword) {
+
+  def apply(value: String): UserPassword = {
+    require(value != null && value.nonEmpty)
+    new UserPassword(value)
+  }
+
+}
+
 case class UserRowPassword(value: String) extends AnyVal with Value[String] {
 
   def generateHash: UserPassword = {
