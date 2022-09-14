@@ -20,7 +20,7 @@ trait Entity[ID <: EntityId] {
 
 /** NOTE: エンティティIDの採番方法を抽象化します。 */
 trait EntityIdGenerator {
-  def generate(): String
+  def generate: String
 }
 
 /** ドメインの関心事ではない物を保持する 楽観ロックや作成者情報とか色々と

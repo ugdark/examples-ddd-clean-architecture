@@ -28,7 +28,7 @@ class UserTableTest extends AutoRollbackSpec {
     it("更新する") { implicit session =>
       val record = UserRecord.fromEntity(UserFixture.generate())
       UserTable.create(record)
-      val created = UserTable.findById(record.id.get).get
+      val created = UserTable.findById(record.id).get
 
       Thread.sleep(100) // 早すぎるのでtimestampズレを出すため
 
@@ -40,22 +40,22 @@ class UserTableTest extends AutoRollbackSpec {
           )
         )
       assert(result >= 1)
-      val updated = UserTable.findById(record.id.get)
+      val updated = UserTable.findById(record.id)
 
       assert(updated.get.name == "test")
-      assert(updated.get.updatedAt.get.isAfter(created.updatedAt.get))
+      assert(updated.get.updatedAt.isAfter(created.updatedAt))
     }
 
     it("楽観ロックを確認する") { implicit session =>
       val record = UserRecord.fromEntity(UserFixture.generate())
       UserTable.create(record)
-      val stored = UserTable.findById(record.id.get).get
+      val stored = UserTable.findById(record.id).get
 
       intercept[OptimisticLockException] {
         UserTable
           .updatedById(
             stored.copy(
-              updatedAt = stored.updatedAt.map(_.minusSeconds(100))
+              updatedAt = stored.updatedAt.minusSeconds(100)
             )
           )
       }
@@ -66,11 +66,11 @@ class UserTableTest extends AutoRollbackSpec {
       UserTable.create(record)
 
       /* select user.id as i_on_user, user.name as n_on_user, user.created_at as ca_on_user, user.updated_at as ua_on_user from user where user.id = 4; */
-      val find = UserTable.findById(record.id.get).get
+      val find = UserTable.findById(record.id).get
 
       assert(find.name == record.name)
-      assert(find.createdAt.get.isBefore(Instant.now()))
-      assert(find.updatedAt.get.isBefore(Instant.now()))
+      assert(find.createdAt.isBefore(Instant.now()))
+      assert(find.updatedAt.isBefore(Instant.now()))
     }
 
     it("削除する") { implicit session =>
@@ -78,10 +78,10 @@ class UserTableTest extends AutoRollbackSpec {
       UserTable.create(record)
 
       /* delete from user where id = 1; */
-      val result = UserTable.deleteById(record.id.get)
+      val result = UserTable.deleteById(record.id)
       assert(result == 1)
 
-      val find = UserTable.findById(record.id.get)
+      val find = UserTable.findById(record.id)
       assert(find.isEmpty)
     }
   }

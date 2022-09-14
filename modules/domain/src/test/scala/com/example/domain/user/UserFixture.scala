@@ -5,7 +5,7 @@ import com.example.domain.{EntityMetaDataCreator, TestSupport}
 object UserFixture extends TestSupport {
 
   def generate(
-    id: String = idGenerator.generate(),
+    id: String = idGenerator.generate,
     name: String =
       new scala.util.Random(new java.security.SecureRandom()).alphanumeric.take(10).mkString,
     password: String =

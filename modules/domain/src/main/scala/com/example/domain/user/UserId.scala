@@ -11,5 +11,5 @@ object UserId extends (String => UserId) with UserIdValidator {
   }
   val MaxLength: Int = 20
 
-  def newId(implicit idGen: EntityIdGenerator): UserId = UserId(idGen.generate())
+  def newId(implicit idGen: EntityIdGenerator): UserId = UserId(idGen.generate)
 }

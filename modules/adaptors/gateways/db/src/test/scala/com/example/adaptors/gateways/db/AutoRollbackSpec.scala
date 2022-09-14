@@ -1,9 +1,10 @@
 package com.example.adaptors.gateways.db
 
-import org.scalatest.Outcome
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funspec.FixtureAnyFunSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.{BeforeAndAfterAll, Outcome}
+import scalikejdbc.config.DBs
 import scalikejdbc.scalatest.AutoRollback
 import scalikejdbc.{DB, NamedDB}
 
@@ -13,7 +14,7 @@ abstract class AutoRollbackSpec
     extends FixtureAnyFunSpec
     with ScalaFutures
     with Matchers
-    with DBSettings
+    with BeforeAndAfterAll
     with AutoRollback {
 
   /** commitしてみたい時用 false(default): rollbackIfActive true: commit
@@ -38,4 +39,14 @@ abstract class AutoRollbackSpec
         }
 
     }
+
+  override protected def beforeAll(): Unit = {
+    DBs.setupAll()
+    super.beforeAll()
+  }
+
+  override protected def afterAll(): Unit = {
+    DBs.closeAll()
+    super.afterAll()
+  }
 }

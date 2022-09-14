@@ -6,11 +6,11 @@ import com.example.domain.user.{User, UserId, UserName, UserPassword}
 import java.time.Instant
 
 protected[db] case class UserRecord(
-  id: Option[Long],
+  id: Long,
   name: String,
   password: String,
-  createdAt: Option[Instant],
-  updatedAt: Option[Instant]
+  createdAt: Instant,
+  updatedAt: Instant
 ) {
 
   /** @return
@@ -20,12 +20,12 @@ protected[db] case class UserRecord(
     */
   def toEntity: User =
     User(
-      UserId(id.map(_.toString).get),
+      UserId(id.toString),
       UserName(name),
       UserPassword(password),
       metaData = EntityMetaDataOnRDSTimestamp(
-        createdAt = createdAt.get,
-        updatedAt = updatedAt.get
+        createdAt = createdAt,
+        updatedAt = updatedAt
       )
     )
 
@@ -36,11 +36,11 @@ protected[db] object UserRecord {
   def fromEntity(entity: User): UserRecord = {
     val meta = entity.metaData.asInstanceOf[EntityMetaDataOnRDSTimestamp]
     UserRecord(
-      Some(entity.id.value.toLong),
+      entity.id.value.toLong,
       entity.name.value,
       entity.password.value,
-      createdAt = Some(meta.createdAt.value),
-      updatedAt = Some(meta.updatedAt.value)
+      createdAt = meta.createdAt.value,
+      updatedAt = meta.updatedAt.value
     )
   }
 
