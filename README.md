@@ -1,8 +1,12 @@
 # examples-ddd-clean-architecture
 
+自分ならDDDでこうやって実装してみたい的な物  
+再学習用
+
 ## 次やること
 - [x] projectの構成変更 [ADR](docs/src/main/paradox/pages/adr/アーキテクチャについて.md)
-- [ ] validatorを実装　[ADR](docs/src/main/paradox/pages/adr/入力チェックについて.md)
+- [x] validatorを実装　[ADR](docs/src/main/paradox/pages/adr/入力チェックについて.md)
+- [ ] repositoryを実装
 
 ## 忘れそうなんで
 
@@ -21,18 +25,18 @@ $ docker-compose up -d
 ### migration
 
 ```sh
-./bin/flyway.sh development migrate 
-./bin/flyway.sh test migrate 
+.bin/flyway.sh development migrate 
+.bin/flyway.sh test migrate 
 ```
 
 ```sh
-./bin/flyway.sh development clean 
-./bin/flyway.sh test clean 
+.bin/flyway.sh development clean 
+.bin/flyway.sh test clean 
 ```
 
 ```sh
-./bin/flyway.sh development info 
-./bin/flyway.sh test info 
+.bin/flyway.sh development info 
+.bin/flyway.sh test info 
 ```
 
 
