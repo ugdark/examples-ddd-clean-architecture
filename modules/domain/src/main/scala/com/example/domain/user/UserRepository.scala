@@ -1,6 +1,6 @@
 package com.example.domain.user
 
-import com.example.domain.RepositoryBase
+import com.example.domain.{IOContext, RepositoryBase}
 
 import scala.util.Try
 
@@ -15,5 +15,5 @@ protected[user] trait UserRepositoryValidator {
     *   UserName
     * @return
     */
-  def verifyForDuplicateNames(name: UserName): Boolean
+  def verifyForDuplicateNames(name: UserName)(implicit ioc: IOContext): Boolean
 }

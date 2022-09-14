@@ -1,13 +1,15 @@
 package com.example.domain.user
 
-import com.example.domain.TestRepositoryOnMemoryBase
+import com.example.domain.{IOContext, TestRepositoryOnMemoryBase}
 
 // UserRepositoryのテスト用
 class UserRepositoryOnMemory()
     extends UserRepository
     with TestRepositoryOnMemoryBase[UserId, User] {
 
-  override def verifyForDuplicateNames(name: UserName): Boolean = false
+  override def verifyForDuplicateNames(name: UserName)(implicit
+    ioc: IOContext = IOContext.Empty
+  ): Boolean = false
 }
 
 object UserRepositoryOnMemory extends UserRepositoryOnMemory

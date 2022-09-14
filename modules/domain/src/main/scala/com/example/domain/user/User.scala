@@ -29,7 +29,8 @@ object User {
     idGenerator: EntityIdGenerator,
     metaDataCreator: EntityMetaDataCreator,
     validator: UserValidator,
-    repositoryValidator: UserRepositoryValidator
+    repositoryValidator: UserRepositoryValidator,
+    ioc: IOContext
   ): Either[ValidatedError, DomainResult[UserEvent, User]] = {
 
     val newId = UserId.newId

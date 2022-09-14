@@ -8,7 +8,7 @@ trait TestSupport {
 
     private val atomicLong = new AtomicLong(1L)
 
-    override def generate(): String = atomicLong.getAndIncrement().toString
+    override def generate: String = atomicLong.getAndIncrement().toString
   }
 
   // テスト用共通IdGenerator

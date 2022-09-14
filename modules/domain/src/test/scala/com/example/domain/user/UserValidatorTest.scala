@@ -2,7 +2,7 @@ package com.example.domain.user
 
 import cats.data.Chain
 import cats.data.Validated.Invalid
-import com.example.domain.EntityMetaData
+import com.example.domain.{EntityMetaData, IOContext}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -27,6 +27,8 @@ class UserValidatorTest extends AnyFunSpec with Matchers {
       val userValidator = new UserValidator() {}
 
       implicit val userRepositoryValidator: UserRepositoryValidator = UserRepositoryOnMemory
+
+      implicit val ioc: IOContext = IOContext.Empty
 
       it("2つの要素に対してエラーが出力される事") {
         userValidator.valid(

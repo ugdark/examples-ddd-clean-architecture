@@ -43,3 +43,18 @@ class TestBeforeAfterCheck
     }
   }
 }
+
+/*
+beforeEach
+before
+test1
+beforeEach
+before
+test2
+after
+afterEach
+after
+afterEach
+afterAll
+なんか予想してたのと違いtest1で他のtestが止まっちまってる。
+ */

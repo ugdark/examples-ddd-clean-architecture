@@ -30,9 +30,9 @@ class UserTableTest extends AutoRollbackSpec {
       UserTable.create(record)
       val created = UserTable.findById(record.id).get
 
-      Thread.sleep(100) // 早すぎるのでtimestampズレを出すため
+      Thread.sleep(500) // 早すぎるのでtimestampズレを出すため
 
-      /* update user set id = 2, name = 'test' , updated_at = 2022-07-05T13:10:24.321077+09:00[Asia/Tokyo] where id = 2 and updated_at = '2022-07-05 04:10:24.0'; */
+      /* update user set id = 2, name = 'test', created_at = 2022-09-14T15:23:44Z, updated_at = 2022-09-14T15:23:44Z, password = '1aedf33d58c9a0b221692570e70a5ac6a5e81768554041674ddeb415ef41f276' , updated_at = 2022-09-14T15:23:45.057362Z[GMT] where id = 2 and updated_at = '2022-09-14 15:23:44.0' */
       val result = UserTable
         .updatedById(
           created.copy(

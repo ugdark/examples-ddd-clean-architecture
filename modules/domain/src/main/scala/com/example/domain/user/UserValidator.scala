@@ -2,7 +2,7 @@ package com.example.domain.user
 
 import cats.implicits.{catsSyntaxTuple3Semigroupal, catsSyntaxValidatedIdBinCompat0}
 import com.example.domain
-import com.example.domain.{EntityMetaData, Validator}
+import com.example.domain.{EntityMetaData, IOContext, Validator}
 
 import scala.util.control.NonFatal
 
@@ -13,7 +13,10 @@ protected[user] trait UserValidator {
     name: String,
     password: String,
     metaData: EntityMetaData
-  )(implicit repositoryValidator: UserRepositoryValidator): domain.ValidationResult[User] = {
+  )(implicit
+    repositoryValidator: UserRepositoryValidator,
+    ioc: IOContext
+  ): domain.ValidationResult[User] = {
     // VOの制約確認
     val validatedVO = validationVO(id, name, password)
 
@@ -57,7 +60,10 @@ protected[user] trait UserValidator {
   // EntityのVO同士制約確認
   private def validationRepository(
     validatedEntity: domain.ValidationResult[User]
-  )(implicit repositoryValidator: UserRepositoryValidator): domain.ValidationResult[User] =
+  )(implicit
+    repositoryValidator: UserRepositoryValidator,
+    ioc: IOContext
+  ): domain.ValidationResult[User] =
     validatedEntity.andThen { user =>
       if (repositoryValidator.verifyForDuplicateNames(user.name)) {
         UserInvalidError.DuplicationName.invalidNec
