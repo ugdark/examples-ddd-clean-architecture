@@ -11,12 +11,14 @@ requireを元に入力チェックを行いたい場合は改めてErrorClassを
 
 基本的にはsuffixで統一する。
 
-- XXXFixture テスト用の共通クラス
 - XXXSpec テスト用の機能Baseクラス
 - XXXTest テストクラス
 - XXXUseCase ユースケース
 - XXXRepository 永続化
 - XXXValidator 検証クラス
+- XXXFixture テスト用の共通Object
+- XXXTestSupport テスト用の共通trait 注入を簡略化
+
 
 極力共通のtraitというかInterfaceを実装する用にしてる
 

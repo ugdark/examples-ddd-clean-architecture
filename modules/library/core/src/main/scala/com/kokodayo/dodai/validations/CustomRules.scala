@@ -8,11 +8,11 @@ object CustomRules {
     if (v1.isEmpty && v2.isEmpty) Left(ValidationField(key, s"$key is どっちか必須"))
     else Right(true)
 
-  def deprecated(key: String, v: Option[_]): Either[ValidationField, Boolean] =
+  def deprecated(key: String, v: Option[?]): Either[ValidationField, Boolean] =
     Either.cond(v.isEmpty, true, ValidationField(key, s"$key is deprecated"))
 
   // 重複確認
-  def distinct(key: String, v: Seq[_]): Either[ValidationField, Boolean] =
+  def distinct(key: String, v: Seq[?]): Either[ValidationField, Boolean] =
     Either.cond(v.size == v.distinct.size, true, ValidationField(key, s"$key is distinct"))
 
   /** ids等を配列で渡すなど用 + 必須入力

@@ -19,7 +19,7 @@ case class SystemError(cause: Throwable) extends ApplicationError(ApplicationErr
 
 /** UseCase等で発生するのはこれをベースにする
   */
-abstract class UsecaseError(errorCode: ErrorCode, args: Any*)
+abstract class UseCaseError(errorCode: ErrorCode, args: Any*)
     extends ApplicationError(errorCode, args)
 
 /*
@@ -36,9 +36,9 @@ trait InValidError {
 /** 入力チェックErrorを保持する
   */
 case class ValidationError(validations: Seq[InValidError])
-    extends UsecaseError(ApplicationErrorCodes.Validation)
+    extends UseCaseError(ApplicationErrorCodes.Validation)
 
-case class NotFoundError(id: EntityId) extends UsecaseError(ApplicationErrorCodes.NotFound)
+case class NotFoundError(id: EntityId) extends UseCaseError(ApplicationErrorCodes.NotFound)
 
 object ApplicationErrorCodes {
   val SystemError = "error.system"

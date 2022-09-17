@@ -27,13 +27,13 @@ object PrettyPrint {
           acc.replace(c, r)
         }
         s""""$replace""""
-      case opt: Some[_] =>
+      case opt: Some[?] =>
         val resultOneLine = s"Some(${nextDepth(opt.get)})"
         if (resultOneLine.length <= maxElementWidth) return resultOneLine
         s"Some(\n$fieldIndent${nextDepth(opt.get)}\n$indent)"
       // For an empty Seq just use its normal String representation.
-      case xs: Seq[_] if xs.isEmpty => xs.toString()
-      case xs: Seq[_]               =>
+      case xs: Seq[?] if xs.isEmpty => xs.toString()
+      case xs: Seq[?]               =>
         // If the Seq is not too long, pretty print on one line.
         val resultOneLine = xs.map(nextDepth).toString()
         if (resultOneLine.length <= maxElementWidth) return resultOneLine
@@ -41,9 +41,9 @@ object PrettyPrint {
         val result = xs.map(x => s"\n$fieldIndent${nextDepth(x)}").toString()
         result.substring(0, result.length - 1) + "\n" + indent + ")"
       // Product should cover case classes.
-      case map: Map[_, _] if map.isEmpty =>
+      case map: Map[?, ?] if map.isEmpty =>
         map.toString()
-      case xs: Map[_, _] =>
+      case xs: Map[?, ?] =>
         val result = xs.map { case (key, value) =>
           s"\n$fieldIndent${nextDepth(key)} -> ${nextDepth(value)}"
         }.toString
