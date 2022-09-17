@@ -4,7 +4,7 @@ import com.example.domain.user.{UserFixture, UserName}
 
 import scala.util.Success
 
-class UserRepositoryOnSkinnyTest extends TestRepositoryBase {
+class UserRepositoryOnSkinnyTest extends TestRepositorySpec {
 
   private val userRepository = UserRepositoryOnSkinny
 

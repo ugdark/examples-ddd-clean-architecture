@@ -1,9 +1,8 @@
 package com.example.domain
 
-import org.scalatest.funspec.AnyFunSpec
-import org.scalatest.matchers.should.Matchers
+import com.kokodayo.dodai.test.UnitTest
 
-class DomainErrorTest extends AnyFunSpec with Matchers {
+class DomainErrorTest extends UnitTest {
 
   object TestError extends DomainError()
 
@@ -14,9 +13,9 @@ class DomainErrorTest extends AnyFunSpec with Matchers {
     // 無理そうならsuccessかignoreしとけばいい。
     val expected =
       """com.example.domain.DomainErrorTest$TestError$
-        |  at com.example.domain.DomainErrorTest.TestError$lzycompute$1(DomainErrorTest.scala:8)
-        |  at com.example.domain.DomainErrorTest.TestError(DomainErrorTest.scala:8)
-        |  at com.example.domain.DomainErrorTest.$anonfun$new$1(DomainErrorTest.scala:11)
+        |  at com.example.domain.DomainErrorTest.TestError$lzycompute$1(DomainErrorTest.scala:7)
+        |  at com.example.domain.DomainErrorTest.TestError(DomainErrorTest.scala:7)
+        |  at com.example.domain.DomainErrorTest.$anonfun$new$1(DomainErrorTest.scala:10)
         |  at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
         |  at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
         |  at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)

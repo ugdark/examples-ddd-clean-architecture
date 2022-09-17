@@ -1,12 +1,29 @@
 package com.example.adaptors.gateways.db
 
+import com.example.domain.EntityMetaDataCreator
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funspec.FixtureAnyFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.{BeforeAndAfterAll, Outcome}
+import org.scalatest.{BeforeAndAfterAll, Outcome, Suite}
 import scalikejdbc.config.DBs
 import scalikejdbc.scalatest.AutoRollback
 import scalikejdbc.{DB, NamedDB}
+
+trait DBsTestSupport extends BeforeAndAfterAll { this: Suite =>
+
+  override protected def beforeAll(): Unit = {
+    DBs.setupAll()
+    super.beforeAll()
+  }
+
+  override protected def afterAll(): Unit = {
+    super.afterAll()
+    try super.afterAll()
+    finally
+      DBs.closeAll()
+  }
+
+}
 
 /** skinny系のAutoRollbackテスト用
   */
@@ -14,8 +31,10 @@ abstract class AutoRollbackSpec
     extends FixtureAnyFunSpec
     with ScalaFutures
     with Matchers
-    with BeforeAndAfterAll
-    with AutoRollback {
+    with AutoRollback
+    with DBsTestSupport {
+
+  implicit protected val entityMetaDataCreator: EntityMetaDataCreator = EntityMetaDataCreatorImpl
 
   /** commitしてみたい時用 false(default): rollbackIfActive true: commit
     */
@@ -40,13 +59,4 @@ abstract class AutoRollbackSpec
 
   override def db(): DB = NamedDB(ConnectionPoolName.Write.name).toDB()
 
-  override protected def beforeAll(): Unit = {
-    DBs.setupAll()
-    super.beforeAll()
-  }
-
-  override protected def afterAll(): Unit = {
-    DBs.closeAll()
-    super.afterAll()
-  }
 }

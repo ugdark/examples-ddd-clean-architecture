@@ -14,17 +14,16 @@ trait Builder extends BeforeAndAfterEach { this: Suite =>
   val builder = new mutable.StringBuilder
 
   override def beforeEach(): Unit = {
-    println("each start")
+    // println("each start")
     builder.append("ScalaTest is ")
     super.beforeEach() // To be stackable, must call super.beforeEach
   }
 
   override def afterEach(): Unit =
     try super.afterEach() // To be stackable, must call super.afterEach
-    finally {
+    finally
       builder.clear()
-      println("each end")
-    }
+  // println("each end")
 }
 
 trait Buffer extends BeforeAndAfterEach { this: Suite =>
@@ -41,18 +40,17 @@ trait ALL extends BeforeAndAfterAll { this: Suite =>
   val allBuilder = new mutable.StringBuilder
 
   override protected def beforeAll(): Unit = {
-    println("beforeAll start")
+    // println("beforeAll start")
     allBuilder.append("ScalaTestAll is ")
     super.beforeAll()
   }
 
   override protected def afterAll(): Unit =
     try super.afterAll()
-    finally {
-      println(allBuilder)
+    finally
+      // println(allBuilder)
       allBuilder.clear()
-      println("beforeAll end")
-    }
+  // println("beforeAll end")
 }
 
 class ExampleSpec extends AnyFunSpec with Builder with Buffer with ALL {

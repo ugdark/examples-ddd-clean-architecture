@@ -57,11 +57,14 @@ trait InvalidError {
 //  val cause: Option[Throwable] = None
 }
 
+// 入力例外を表す
+//case class InValidError(field: String, message: String)
+
 /** Domain層ですべての入力チェック担う用にするのでこちらで定義してる。
   */
 case class ValidatedError(invalids: Seq[InvalidError]) extends DomainError
 
-case class DomainResult[+EVENT <: DomainEvent, +ENTITY <: Entity[_ <: EntityId]](
+case class DomainResult[+EVENT <: DomainEvent, +ENTITY <: Entity[? <: EntityId]](
   event: EVENT,
   entity: ENTITY
 )

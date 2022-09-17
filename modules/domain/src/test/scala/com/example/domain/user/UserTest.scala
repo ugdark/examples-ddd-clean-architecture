@@ -1,10 +1,9 @@
 package com.example.domain.user
 
 import com.example.domain.*
-import org.scalatest.funspec.AnyFunSpec
-import org.scalatest.matchers.should.Matchers
+import com.kokodayo.dodai.test.UnitTest
 
-class UserTest extends AnyFunSpec with Matchers {
+class UserTest extends UnitTest {
 
   describe("ユーザーを") {
 

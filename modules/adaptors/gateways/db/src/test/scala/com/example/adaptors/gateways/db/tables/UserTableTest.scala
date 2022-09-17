@@ -1,16 +1,13 @@
 package com.example.adaptors.gateways.db.tables
 
 import com.example.adaptors.gateways.db.tables.records.UserRecord
-import com.example.adaptors.gateways.db.{AutoRollbackSpec, EntityMetaDataCreatorImpl}
-import com.example.domain.EntityMetaDataCreator
+import com.example.adaptors.gateways.db.AutoRollbackSpec
 import com.example.domain.user.UserFixture
 import skinny.orm.exception.OptimisticLockException
 
 import java.time.Instant
 
 class UserTableTest extends AutoRollbackSpec {
-
-  implicit private val metaDataCreator: EntityMetaDataCreator = EntityMetaDataCreatorImpl
 
   describe("ユーザーテーブル") {
 

@@ -4,21 +4,20 @@ import com.example.domain.{EntityMetaDataCreator, IOContext}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funspec.FixtureAnyFunSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.{BeforeAndAfterEach, FixtureTestSuite, Outcome}
+import org.scalatest.{FixtureTestSuite, Outcome}
 import scalikejdbc.*
 
 /** repositoryTest用の基底クラス scalikejdbc.scalatest.AutoRollbackを参考にIOContextに改良してる。
   */
-trait TestRepositoryBase
+abstract class TestRepositorySpec
     extends FixtureAnyFunSpec
-    with BeforeAndAfterEach
     with ScalaFutures
     with Matchers
-    with DBSettings
+    with DBsTestSupport
     with LoanPattern { self: FixtureTestSuite =>
   scalikejdbc.config.DBs.setupAll()
 
-  implicit protected val metaDataCreator: EntityMetaDataCreator = EntityMetaDataCreatorImpl
+  implicit protected val entityMetaDataCreator: EntityMetaDataCreator = EntityMetaDataCreatorImpl
 
   override type FixtureParam = IOContext
 
@@ -43,9 +42,9 @@ trait TestRepositoryBase
       try {
         db.begin()
 
-        db withinTx { implicit session =>
-          fixture(ioc(session))
-        }
+//        db withinTx { implicit session =>
+//          fixture(ioc(session))
+//        }
         withFixture(
           test.toNoArgTest(ioc(db.withinTxSession()))
         )
@@ -60,13 +59,10 @@ trait TestRepositoryBase
 
   def db(): DB = NamedDB(ConnectionPoolName.Write.name).toDB()
 
-  /** Prepares database for the test.
-    * @param ioc
-    *   IOContext implicitly
-    */
-  def fixture(implicit ioc: IOContext): Unit = {}
+//  /** Prepares database for the test.
+//    * @param ioc
+//    *   IOContext implicitly
+//    */
+//  def fixture(implicit ioc: IOContext): Unit = ()
 
-  override protected def beforeEach(): Unit = super.beforeEach()
-
-  override protected def afterEach(): Unit = super.afterEach()
 }

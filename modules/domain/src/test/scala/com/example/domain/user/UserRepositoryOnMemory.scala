@@ -3,7 +3,7 @@ package com.example.domain.user
 import com.example.domain.{IOContext, TestRepositoryOnMemoryBase}
 
 // UserRepositoryのテスト用
-class UserRepositoryOnMemory()
+case class UserRepositoryOnMemory()
     extends UserRepository
     with TestRepositoryOnMemoryBase[UserId, User] {
 

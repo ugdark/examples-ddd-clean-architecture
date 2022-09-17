@@ -1,18 +1,15 @@
 package com.example.domain.user
 
-import com.example.domain.IOContext
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.funspec.AnyFunSpec
-import org.scalatest.matchers.should.Matchers
+import com.example.domain.DomainTestSupport
+import com.kokodayo.dodai.test.UnitTest
 
-class UserRepositoryOnMemoryTest extends AnyFunSpec with ScalaFutures with Matchers {
+class UserRepositoryOnMemoryTest extends UnitTest with DomainTestSupport {
 
   describe("UserRepositoryの") {
 
     // 他のRepositoryTestでは不要
     it("ライフサイクルの確認") {
-      implicit val ioc: IOContext = IOContext.Empty
-      val repository              = new UserRepositoryOnMemory()
+      val repository = new UserRepositoryOnMemory()
       for {
         _          <- repository.clear()
         create     <- repository.store(UserFixture.generate())

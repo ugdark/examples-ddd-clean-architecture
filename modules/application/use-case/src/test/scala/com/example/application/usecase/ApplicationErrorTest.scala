@@ -1,12 +1,13 @@
 package com.example.application.usecase
 
+import com.example.domain.InvalidError
 import com.kokodayo.dodai.test.SnapshotMatcher
 import org.scalatest.funspec.FixtureAnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
 class ApplicationErrorTest extends FixtureAnyFunSpec with Matchers with SnapshotMatcher {
 
-  private case class LoginIdError(field: String) extends InValidError {
+  private case class LoginIdError(field: String) extends InvalidError {
     override val message: String = "LoginIdは4文字以上20文字以下半角英数字で必須入力です"
   }
 
@@ -21,7 +22,8 @@ class ApplicationErrorTest extends FixtureAnyFunSpec with Matchers with Snapshot
 
       // 可視化用に変換する
       val inValidList = validationError.validations.map { inValid =>
-        Map("field" -> inValid.field, "message" -> inValid.message)
+        // Map("field" -> inValid.field, "message" -> inValid.message)
+        Map("message" -> inValid.message)
       }
       Map("ValidationError" -> inValidList) should matchSnapshot()
     }

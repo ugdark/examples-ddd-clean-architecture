@@ -1,8 +1,8 @@
 package com.example.domain
 
-import org.scalatest.funspec.AnyFunSpec
+import com.kokodayo.dodai.test.UnitTest
 
-class PagingTest extends AnyFunSpec {
+class PagingTest extends UnitTest {
 
   describe("Pagingを確認") {
 

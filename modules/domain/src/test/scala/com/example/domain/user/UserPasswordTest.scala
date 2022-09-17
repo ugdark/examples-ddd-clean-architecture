@@ -1,9 +1,8 @@
 package com.example.domain.user
 
-import org.scalatest.funspec.AnyFunSpec
-import org.scalatest.matchers.should.Matchers
+import com.kokodayo.dodai.test.UnitTest
 
-class UserPasswordTest extends AnyFunSpec with Matchers {
+class UserPasswordTest extends UnitTest {
 
   describe("UserPasswordTest") {
     it("暗号化確認") {

@@ -1,6 +1,6 @@
 package com.example.application.usecase
 
-import com.example.domain.{EntityId, StackTraceSupport}
+import com.example.domain.{EntityId, InvalidError, StackTraceSupport}
 
 /** application層で発生するErrorはすべてこちらを継承する DomainErrorはすべてApplicationErrorに変換する事
   */
@@ -17,6 +17,11 @@ sealed abstract class ApplicationError(val errorCode: ErrorCode, val args: Any*)
   */
 case class SystemError(cause: Throwable) extends ApplicationError(ApplicationErrorCodes.SystemError)
 
+/** 想定外のExceptionのキャッチ用 UseCase
+  */
+case class UseCaseSystemError(cause: Throwable)
+    extends UseCaseError(ApplicationErrorCodes.SystemError)
+
 /** UseCase等で発生するのはこれをベースにする
   */
 abstract class UseCaseError(errorCode: ErrorCode, args: Any*)
@@ -26,16 +31,13 @@ abstract class UseCaseError(errorCode: ErrorCode, args: Any*)
   これ以後は汎用的な物を記載する
  */
 
-/** 入力チェックErrorを保持する
-  */
-trait InValidError {
-  val field: String
-  val message: String
-}
+///** 入力チェックErrorを保持する
+//  */
+//case class InValidError(field: String, message: String)
 
 /** 入力チェックErrorを保持する
   */
-case class ValidationError(validations: Seq[InValidError])
+case class ValidationError(validations: Seq[InvalidError])
     extends UseCaseError(ApplicationErrorCodes.Validation)
 
 case class NotFoundError(id: EntityId) extends UseCaseError(ApplicationErrorCodes.NotFound)
