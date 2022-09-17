@@ -21,8 +21,6 @@ abstract class AutoRollbackSpec
     */
   protected val commitMode: Boolean = false
 
-  override def db(): DB = NamedDB(ConnectionPoolName.Write.name).toDB()
-
   override def withFixture(test: OneArgTest): Outcome =
     using(db()) { db =>
       try {
@@ -39,6 +37,8 @@ abstract class AutoRollbackSpec
         }
 
     }
+
+  override def db(): DB = NamedDB(ConnectionPoolName.Write.name).toDB()
 
   override protected def beforeAll(): Unit = {
     DBs.setupAll()

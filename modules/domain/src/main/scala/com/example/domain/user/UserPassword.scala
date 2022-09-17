@@ -27,12 +27,12 @@ case class UserRowPassword(value: String) extends AnyVal with Value[String] {
 
 object UserRowPassword extends (String => UserRowPassword) with UserRawPasswordValidator {
 
+  protected[user] val MinLength = 6
+  protected[user] val MaxLength = 20
+
   def apply(value: String): UserRowPassword = {
     require(value != null && value.nonEmpty)
     require(value.length >= MinLength && value.length <= MaxLength)
     new UserRowPassword(value)
   }
-
-  protected[user] val MinLength = 6
-  protected[user] val MaxLength = 20
 }

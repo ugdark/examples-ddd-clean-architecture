@@ -9,7 +9,7 @@ import org.scalatest.{FixtureTestSuite, Outcome, SuiteMixin, TestData}
 import java.io.{File, PrintWriter}
 import scala.annotation.unused
 import scala.io.Source
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.util.Try
 
 trait DefaultSerializers {
@@ -55,18 +55,18 @@ trait SnapshotLoader {
   private val fullWritePath =
     s"${getClass.getResource("").getPath.split("target").head}$snapshotFolder/$testFolder/__snapshots__"
 
-  private def folderPath: String = new File(s"$fullWritePath").getAbsolutePath
-
-  //  private def filePath(id: String): String = new File(s"$folderPath/$id.snap").getAbsolutePath
-  private def filePath(id: String): String =
-    new File(s"$folderPath/${getClass.getName.split("\\.").last}-$id.snap").getAbsolutePath
-
   def loadSnapshot(id: String): Option[String] =
     Try {
       val source = Source.fromFile(filePath(id))
       try source.mkString
       finally source.close()
     }.toOption
+
+  //  private def filePath(id: String): String = new File(s"$folderPath/$id.snap").getAbsolutePath
+  private def filePath(id: String): String =
+    new File(s"$folderPath/${getClass.getName.split("\\.").last}-$id.snap").getAbsolutePath
+
+  private def folderPath: String = new File(s"$fullWritePath").getAbsolutePath
 
   def writeSnapshot[T](id: String, content: T, isEscape: Boolean = true)(implicit
     s: SnapshotSerializer[T]
@@ -136,9 +136,27 @@ trait SnapshotMatcher
     with DefaultSerializers {
   self: FixtureTestSuite =>
 
-  private var testMap: Map[String, Int] = Map.empty
   private val ShouldGenerateSnapshot =
     sys.env.getOrElse("UPDATE_SNAPSHOT_TEST", "false").toBoolean
+  private var testMap: Map[String, Int] = Map.empty
+
+  def matchSnapshot[T]()(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
+    new SnapshotShouldMatch[T](None)
+
+  // ファイル名を変更したい場合に使用
+  def matchSnapshot[T](
+    explicitId: String
+  )(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
+    new SnapshotShouldMatch[T](Option(explicitId))
+
+  def matchSnapshotNoEscape[T]()(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
+    new SnapshotShouldMatch[T](None, isEscape = false)
+
+  // ファイル名を変更したい場合に使用
+  def matchSnapshotNoEscape[T](
+    explicitId: String
+  )(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
+    new SnapshotShouldMatch[T](Option(explicitId), isEscape = false)
 
   private def getCurrentAndSetNext(id: String, isExplicit: Boolean): String = {
     val next = testMap.getOrElse(id, 0) + 1
@@ -185,23 +203,5 @@ trait SnapshotMatcher
       if (isEscape) s.serialize(left) == content
       else left.toString == content
   }
-
-  def matchSnapshot[T]()(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
-    new SnapshotShouldMatch[T](None)
-
-  // ファイル名を変更したい場合に使用
-  def matchSnapshot[T](
-    explicitId: String
-  )(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
-    new SnapshotShouldMatch[T](Option(explicitId))
-
-  def matchSnapshotNoEscape[T]()(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
-    new SnapshotShouldMatch[T](None, isEscape = false)
-
-  // ファイル名を変更したい場合に使用
-  def matchSnapshotNoEscape[T](
-    explicitId: String
-  )(implicit s: SnapshotSerializer[T], test: TestData): Matcher[T] =
-    new SnapshotShouldMatch[T](Option(explicitId), isEscape = false)
 
 }

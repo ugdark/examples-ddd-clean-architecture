@@ -1,6 +1,6 @@
 package com.example.adaptors.gateways.db.tables.orm
 
-import scalikejdbc._
+import scalikejdbc.*
 import skinny.orm.SkinnyCRUDMapperWithId
 import skinny.orm.feature.{CRUDFeatureWithId, OptimisticLockWithTimestampFeatureWithId}
 
@@ -26,6 +26,12 @@ protected[tables] trait CustomCRUDMapperWithIdAndTimestamp[Id, Entity]
   override def updateBy(where: SQLSyntax): UpdateOperationBuilder =
     new UpdateOperationBuilderWithVersionFix(this, where)
 
+  // countを使うとwhereが空になるのでactiveならこっちが必要になる
+  def countByDeletedAtIsNull()(implicit s: DBSession = autoSession): Long =
+    withSQL {
+      countQueryWithAssociations.where(defaultScopeWithDefaultAlias)
+    }.map(_.long(1)).single.apply().getOrElse(0L)
+
   /** 　OptimisticLockWithTimestampFeatureWithIdを参考に変更した 通常はsqls.currentTimestampを使用していた Update query
     * builder/executor.
     * @param mapper
@@ -46,11 +52,5 @@ protected[tables] trait CustomCRUDMapperWithIdAndTimestamp[Id, Entity]
     private[this] val c = defaultAlias.support.column.field(lockTimestampFieldName)
     addUpdateSQLPart(sqls"$c = ${ZonedDateTime.now()}")
   }
-
-  // countを使うとwhereが空になるのでactiveならこっちが必要になる
-  def countByDeletedAtIsNull()(implicit s: DBSession = autoSession): Long =
-    withSQL {
-      countQueryWithAssociations.where(defaultScopeWithDefaultAlias)
-    }.map(_.long(1)).single.apply().getOrElse(0L)
 
 }

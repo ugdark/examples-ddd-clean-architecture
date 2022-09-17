@@ -1,6 +1,6 @@
 package com.example.domain.user
 
-import com.example.domain._
+import com.example.domain.*
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 

@@ -4,15 +4,16 @@
 再学習用
 
 ## 次やること
+
 - [x] projectの構成変更 [ADR](docs/src/main/paradox/pages/adr/アーキテクチャについて.md)
-- [x] validatorを実装　[ADR](docs/src/main/paradox/pages/adr/入力チェックについて.md)
+- [x] validatorを実装 [ADR](docs/src/main/paradox/pages/adr/入力チェックについて.md)
 - [x] repositoryを実装
 - [ ] useCase実装
 - [ ] controller実装
 
 ## 忘れそうなんで
 
-### format 
+### format
 
 ```shell
 $ sbt format
@@ -21,9 +22,11 @@ $ sbt format
 ### docker
 
 - mysql 8
+
 ```shell
 $ docker-compose up -d
 ```
+
 ### migration
 
 ```sh
@@ -41,11 +44,11 @@ $ docker-compose up -d
 .bin/flyway.sh test info 
 ```
 
-
 ### 参考
 
 - [crossroad0201/ddd-on-scala](https://github.com/crossroad0201/ddd-on-scala)
 - [crossroad0201/doc](https://speakerdeck.com/crossroad0201/scala-on-ddd)
 
 とりあえずのリンク。まだ参考にしてるわけではない
+
 - [クリーンアーキテクチャ Application Business Rules の役割](https://qiita.com/u-dai/items/f670c3fc5302861aef0b)

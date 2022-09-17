@@ -1,20 +1,23 @@
 # AnyValと契約プログラミングについて
 
 ## Status
+
 採用
 
 ## Context
-未着手
 
+未着手
 
 ## Decision
 
 ValueObjectはAnyValを使えとあるので下記で記載する。
+
 ```scala
 case class Name(value: String) extends AnyVal
 ```
 
 ここまではいいのだけど、AnyVal+契約プログラミングっぽくすると
+
 ```scala
 case class Name(value: String) extends AnyVal {
   require(value.length <= 10)

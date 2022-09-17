@@ -5,7 +5,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funspec.FixtureAnyFunSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterEach, FixtureTestSuite, Outcome}
-import scalikejdbc._
+import scalikejdbc.*
 
 /** repositoryTest用の基底クラス scalikejdbc.scalatest.AutoRollbackを参考にIOContextに改良してる。
   */
@@ -38,14 +38,6 @@ trait TestRepositoryBase
   implicit def ioc(implicit session: DBSession): IOContext =
     IOContextOnSkinny(session, ConnectionPoolName.Write)
 
-  def db(): DB = NamedDB(ConnectionPoolName.Write.name).toDB()
-
-  /** Prepares database for the test.
-    * @param ioc
-    *   IOContext implicitly
-    */
-  def fixture(implicit ioc: IOContext): Unit = {}
-
   def withFixture(test: OneArgTest): Outcome =
     using(db()) { implicit db =>
       try {
@@ -65,6 +57,14 @@ trait TestRepositoryBase
         }
 
     }
+
+  def db(): DB = NamedDB(ConnectionPoolName.Write.name).toDB()
+
+  /** Prepares database for the test.
+    * @param ioc
+    *   IOContext implicitly
+    */
+  def fixture(implicit ioc: IOContext): Unit = {}
 
   override protected def beforeEach(): Unit = super.beforeEach()
 

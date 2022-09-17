@@ -1,7 +1,7 @@
 package com.example.domain.user
 
 import cats.data.Validated
-import com.example.domain._
+import com.example.domain.*
 
 import scala.util.Try
 

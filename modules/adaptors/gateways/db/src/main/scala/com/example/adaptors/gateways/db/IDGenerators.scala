@@ -1,7 +1,7 @@
 package com.example.adaptors.gateways.db
 
 import com.example.domain.EntityIdGenerator
-import scalikejdbc._
+import scalikejdbc.*
 
 case class IDGeneratorError(message: String) extends Throwable(message)
 

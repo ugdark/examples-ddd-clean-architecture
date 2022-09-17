@@ -4,12 +4,11 @@ import scala.collection.Seq
 
 trait Enum[A <: EnumColumn] {
 
-  val values: Seq[A]
-
   /** 初期値はvaluesのheadになるので変更が必要なら {{{override lazy val defaultValue: A = Enum}}} してください
     * 全域関数になっていないことに注意
     */
   lazy val defaultValue: A = values.head
+  val values: Seq[A]
 
   def of(id: Int): A =
     this.find(id).getOrElse {
@@ -20,15 +19,10 @@ trait Enum[A <: EnumColumn] {
       throw new IllegalArgumentException(s"`$keyword` is not $getSimpleName text.")
     }
 
-  def find(id: Int): Option[A] = values.find(_.id == id)
-  def find(keyword: String): Option[A] =
-    values.find(_.keyword.toLowerCase == keyword.toLowerCase)
-
   private def getSimpleName: String = getClass.getSimpleName.replace("$", "")
 
-  def orDefault(id: Int): A = find(id).getOrElse(defaultValue)
-
-  def orDefault(keyword: String): A = find(keyword).getOrElse(defaultValue)
+  def find(keyword: String): Option[A] =
+    values.find(_.keyword.toLowerCase == keyword.toLowerCase)
 
   def orDefault[T](keyOpt: Option[T]): A =
     keyOpt match {
@@ -36,5 +30,11 @@ trait Enum[A <: EnumColumn] {
       case Some(value: Int)    => orDefault(value)
       case _                   => defaultValue
     }
+
+  def orDefault(id: Int): A = find(id).getOrElse(defaultValue)
+
+  def find(id: Int): Option[A] = values.find(_.id == id)
+
+  def orDefault(keyword: String): A = find(keyword).getOrElse(defaultValue)
 
 }

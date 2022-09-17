@@ -13,11 +13,11 @@ case class Paging(page: Page = Page(1), limit: Limit = Limit(1000)) {
 }
 
 object Paging {
-  def apply(page: Int, limit: Int): Paging =
-    new Paging(Page(page), Limit(limit))
-
   // 基本全件取る用
   val All: Paging = Paging(Page(Int.MaxValue), Limit(10000))
+
+  def apply(page: Int, limit: Int): Paging =
+    new Paging(Page(page), Limit(limit))
 }
 
 case class Page(value: Int) {

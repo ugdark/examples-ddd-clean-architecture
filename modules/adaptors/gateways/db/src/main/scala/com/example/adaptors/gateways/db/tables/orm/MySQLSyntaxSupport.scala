@@ -1,6 +1,6 @@
 package com.example.adaptors.gateways.db.tables.orm
 
-import scalikejdbc._
+import scalikejdbc.*
 
 protected[orm] object MySQLSyntaxSupport {
   implicit class RichInsertSQLBuilder(private val self: InsertSQLBuilder) extends AnyVal {
@@ -13,6 +13,8 @@ protected[orm] object MySQLSyntaxSupport {
       self.append(sqls"on duplicate key update $update")
   }
 
+  val replace: QueryDSL.replace.type = QueryDSL.replace
+
   object QueryDSL {
     object replace {
       def into(support: SQLSyntaxSupport[_]): InsertSQLBuilder = InsertSQLBuilder(
@@ -20,7 +22,5 @@ protected[orm] object MySQLSyntaxSupport {
       )
     }
   }
-
-  val replace: QueryDSL.replace.type = QueryDSL.replace
 
 }

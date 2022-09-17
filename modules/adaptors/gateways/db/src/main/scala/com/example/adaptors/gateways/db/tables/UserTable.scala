@@ -24,6 +24,13 @@ protected[tables] class UserTable extends CustomCRUDMapperWithIdAndTimestamp[Lon
   override def extract(rs: WrappedResultSet, n: scalikejdbc.ResultName[UserRecord]): UserRecord =
     autoConstruct(rs, n)
 
+  def create(record: UserRecord)(implicit session: DBSession = autoSession): Long =
+    createWithAttributes(commonNamedValues(record): _*)
+
+  def updatedById(record: UserRecord)(implicit session: DBSession = autoSession): Long =
+    updateByIdAndTimestamp(record.id, record.updatedAt pipe toJoda)
+      .withAttributes(commonNamedValues(record): _*)
+
   def commonNamedValues(record: UserRecord): Seq[(String, Any)] =
     Seq(
       "id"        -> record.id,
@@ -32,13 +39,6 @@ protected[tables] class UserTable extends CustomCRUDMapperWithIdAndTimestamp[Lon
       "createdAt" -> record.createdAt,
       "updatedAt" -> record.updatedAt
     )
-
-  def create(record: UserRecord)(implicit session: DBSession = autoSession): Long =
-    createWithAttributes(commonNamedValues(record): _*)
-
-  def updatedById(record: UserRecord)(implicit session: DBSession = autoSession): Long =
-    updateByIdAndTimestamp(record.id, record.updatedAt pipe toJoda)
-      .withAttributes(commonNamedValues(record): _*)
 
   protected def toJoda(instant: Instant): org.joda.time.DateTime =
     new org.joda.time.DateTime(instant.toEpochMilli)
