@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration>
+  <!-- logback自身の初期logをoff-->
+  <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+</configuration>

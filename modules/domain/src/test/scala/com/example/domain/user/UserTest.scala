@@ -21,7 +21,7 @@ class UserTest extends AnyFunSpec with Matchers {
       implicit val metaDataCreator: EntityMetaDataCreator = new EntityMetaDataCreator() {
         override def create: EntityMetaData = EntityMetaData.Empty
       }
-      implicit val userValidator: UserValidator                     = new UserValidator {}
+
       implicit val userRepositoryValidator: UserRepositoryValidator = UserRepositoryOnMemory
       implicit val ioc: IOContext                                   = IOContext.Empty
 

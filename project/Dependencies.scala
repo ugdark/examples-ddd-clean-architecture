@@ -25,7 +25,7 @@ object Dependencies {
 //    val skinny      = "4.0.0"
 //    val scalikeJDBC = "4.0.0"
 
-    val mysql: ModuleID     = "mysql"                 % "mysql-connector-java" % "8.0.29"
+    val mysql: ModuleID     = "mysql"                 % "mysql-connector-java" % "8.0.30"
     val skinnyOrm: ModuleID = "org.skinny-framework" %% "skinny-orm"           % "4.0.0"
 
     object scalikejdbc {
@@ -36,7 +36,7 @@ object Dependencies {
 
     object typeSafe {
       val config: ModuleID   = "com.typesafe"       % "config"    % "1.4.2"
-      val AkkaHttp: ModuleID = "com.typesafe.akka" %% "akka-http" % "10.2.9"
+      val AkkaHttp: ModuleID = "com.typesafe.akka" %% "akka-http" % "10.2.10"
     }
 
     val AkkaHttpCirce: ModuleID = "de.heikoseeberger" %% "akka-http-circe" % "1.39.2"
@@ -48,7 +48,7 @@ object Dependencies {
     val ScalaTest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.12"
 
     val LogbackClassic: ModuleID =
-      "ch.qos.logback" % "logback-classic" % "1.2.11"
+      "ch.qos.logback" % "logback-classic" % "1.4.0"
 
     val hashids: ModuleID = "org.hashids" % "hashids" % "1.0.3"
   }
@@ -59,7 +59,7 @@ object Dependencies {
     version      := "1.0.0",
     scalacOptions := Seq(
       "-deprecation", // @deprecated なAPIが使われている箇所を警告します
-      "-feature",     //  langauge feature の import が必要な箇所を警告します
+      "-feature",     //  language feature の import が必要な箇所を警告します
       "-unchecked",
       "-Xlint" // 警告もりもり
       // "-Xfatal-warnings" // Xlintのwarningをerrorとしちゃう testを書いてる時とか面倒なんで
@@ -70,7 +70,9 @@ object Dependencies {
     semanticdbVersion := scalafixSemanticdb.revision,
     // scalafixで追加 <--
     libraryDependencies ++= Seq(Modules.CatsCore, Modules.typeSafe.config, Modules.Enumeratum),
-    Test / javaOptions ++= Seq("-Duser.timezone=UTC"),
+    Test / javaOptions ++= Seq(
+      "-Duser.timezone=UTC"
+    ),
     Test / parallelExecution := true, // 明示的にtrueにしてる
     Test / fork              := true  // Test / javaOptions が効かないのでtrue
   )

@@ -6,7 +6,9 @@
 ## 次やること
 - [x] projectの構成変更 [ADR](docs/src/main/paradox/pages/adr/アーキテクチャについて.md)
 - [x] validatorを実装　[ADR](docs/src/main/paradox/pages/adr/入力チェックについて.md)
-- [ ] repositoryを実装
+- [x] repositoryを実装
+- [ ] useCase実装
+- [ ] controller実装
 
 ## 忘れそうなんで
 

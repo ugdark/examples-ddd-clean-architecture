@@ -6,7 +6,7 @@ import com.example.domain.{EntityMetaData, IOContext, Validator}
 
 import scala.util.control.NonFatal
 
-protected[user] trait UserValidator {
+protected[user] object UserValidator {
 
   def valid(
     id: String,

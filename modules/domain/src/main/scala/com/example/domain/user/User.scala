@@ -22,20 +22,21 @@ case class User(
 
 object User {
 
+  private val userValidator = UserValidator
+
   def create(
     name: String,
     password: String
   )(implicit
     idGenerator: EntityIdGenerator,
     metaDataCreator: EntityMetaDataCreator,
-    validator: UserValidator,
     repositoryValidator: UserRepositoryValidator,
     ioc: IOContext
   ): Either[ValidatedError, DomainResult[UserEvent, User]] = {
 
     val newId = UserId.newId
 
-    val validated = validator.valid(
+    val validated = userValidator.valid(
       newId.value,
       name,
       password,
