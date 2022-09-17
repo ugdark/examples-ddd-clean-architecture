@@ -1,15 +1,11 @@
 package com.example.application.usecase
 
-import com.example.domain.EntityId
+import com.example.domain.{EntityId, StackTraceSupport}
 
 /** application層で発生するErrorはすべてこちらを継承する DomainErrorはすべてApplicationErrorに変換する事
   */
-sealed abstract class ApplicationError(val errorCode: ErrorCode, val args: Any*) {
-
-  protected val stackTrace: Array[StackTraceElement] = {
-    val traces = Thread.currentThread().getStackTrace
-    traces.drop(traces.lastIndexWhere(t => t.getClassName == getClass.getName) + 1)
-  }
+sealed abstract class ApplicationError(val errorCode: ErrorCode, val args: Any*)
+    extends StackTraceSupport {
 
   override def toString: String =
     s"""${getClass.getName}($errorCode, [${args.mkString(", ")}])
