@@ -2,36 +2,42 @@ package com.example.domain.user
 
 import com.example.domain.InvalidError
 
-sealed trait UserInvalidError
+sealed abstract class UserInvalidError extends InvalidError
 
 /** Userのドメインでの入力エラーの一覧
   */
 object UserInvalidError {
   final private val MessagePrefix: String = "ユーザーの"
 
-  case object Id extends UserInvalidError with InvalidError {
-    override val message: String = s"${MessagePrefix}IdはUUIDの形式です。"
-  }
-  case object DuplicationId extends UserInvalidError with InvalidError {
-    override val message: String = s"${MessagePrefix}Idが既に使用されてます。"
-  }
+  case class Id(
+    field: String = "user.id",
+    message: String = s"${MessagePrefix}IdはUUIDの形式です。"
+  ) extends UserInvalidError
 
-  case object Name extends UserInvalidError with InvalidError {
-    override val message: String = s"${MessagePrefix}名前は${UserName.MaxLength}文字以内です。"
-  }
+  case class DuplicationId(
+    field: String = "user.id",
+    message: String = s"${MessagePrefix}Idが既に使用されてます。"
+  ) extends UserInvalidError
 
-  case object DuplicationName extends UserInvalidError with InvalidError {
-    override val message: String = s"${MessagePrefix}名前が既に使用されてます。"
-  }
+  case class Name(
+    field: String = "user.name",
+    message: String = s"${MessagePrefix}名前は${UserName.MaxLength}文字以内です。"
+  ) extends UserInvalidError
 
-  case object Password extends UserInvalidError with InvalidError {
-    override val message: String =
+  case class DuplicationName(
+    field: String = "user.name",
+    message: String = s"${MessagePrefix}名前が既に使用されてます。"
+  ) extends UserInvalidError
+
+  case class Password(
+    field: String = "user.password",
+    message: String =
       s"${MessagePrefix}パスワードは${UserRowPassword.MinLength}以上${UserRowPassword.MaxLength}文字以内です。"
-  }
+  ) extends UserInvalidError
 
-  case object NameAndPasswordSame extends UserInvalidError with InvalidError {
-    override val message: String =
-      s"${MessagePrefix}名前とパスワードは同じにできません。"
-  }
+  case class NameAndPasswordSame(
+    field: String = "user",
+    message: String = s"${MessagePrefix}名前とパスワードは同じにできません。"
+  ) extends UserInvalidError
 
 }

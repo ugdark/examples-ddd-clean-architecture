@@ -1,6 +1,6 @@
 package com.example.application.usecase.user
 
-import com.example.application.usecase.UseCaseSpec
+import com.example.application.usecase.{UseCaseError, UseCaseSpec}
 import com.example.domain.user.{
   UserEvent,
   UserEventPublisher,
@@ -29,11 +29,18 @@ class UserUseCaseTest extends UseCaseSpec with UserRepositorySupport {
   }
 
   describe("UserUseCase") {
-    it("正常系確認") {
+    it("正常系確認") { implicit test =>
       val request = UserUseCase.Request("test taro", "PASSword123")
       val result  = userUseCaseFixture.create(request = request)
-      result.isRight shouldBe true
-
+      result should matchSnapshot()
     }
+
+    it("入力Error系確認") { implicit test =>
+      val request = UserUseCase.Request("", "b")
+      val result: Either[UseCaseError, UserUseCase.Response] =
+        userUseCaseFixture.create(request = request)
+      result.swap should matchSnapshot()
+    }
+
   }
 }

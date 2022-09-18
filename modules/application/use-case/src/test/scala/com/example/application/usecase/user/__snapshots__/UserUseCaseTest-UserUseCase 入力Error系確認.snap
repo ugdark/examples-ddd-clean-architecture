@@ -1,0 +1,10 @@
+Right(ValidationError(List(
+  Name(
+    field = "user.name",
+    message = "ユーザーの名前は20文字以内です。"
+  ), 
+  Password(
+    field = "user.password",
+    message = "ユーザーのパスワードは6以上20文字以内です。"
+  )
+)))

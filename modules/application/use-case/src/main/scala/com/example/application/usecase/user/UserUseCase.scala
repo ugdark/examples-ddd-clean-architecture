@@ -26,7 +26,7 @@ trait UserUseCase {
 
   // 本当はimplicit外したい
   implicit protected val userRepository: UserRepository
-  val userEventPublisher: UserEventPublisher
+  protected val userEventPublisher: UserEventPublisher
 
   def create(request: UserUseCase.Request): Either[UseCaseError, UserUseCase.Response] =
     ioContextProvider.withTransaction { implicit ioc =>

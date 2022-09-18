@@ -49,16 +49,11 @@ trait Validator[T, VO] {
   def valid(value: T): ValidationResult[VO]
 }
 
-//trait ValueValidation[T] extends Any with Value[T] with Validation
-
 // 入力例外を表す
 trait InvalidError {
+  val field: String
   val message: String
-//  val cause: Option[Throwable] = None
 }
-
-// 入力例外を表す
-//case class InValidError(field: String, message: String)
 
 /** Domain層ですべての入力チェック担う用にするのでこちらで定義してる。
   */

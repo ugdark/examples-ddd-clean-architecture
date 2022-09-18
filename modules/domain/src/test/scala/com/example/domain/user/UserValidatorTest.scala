@@ -12,12 +12,12 @@ class UserValidatorTest extends UnitTest {
       val userIdValidator = new UserIdValidator() {}
 
       it("必須入力") {
-        userIdValidator.valid("") shouldBe Invalid(Chain(UserInvalidError.Id))
+        userIdValidator.valid("") shouldBe Invalid(Chain(UserInvalidError.Id()))
       }
 
       it("長さ確認") {
         userIdValidator.valid(scala.util.Random.alphanumeric.take(21).mkString) shouldBe Invalid(
-          Chain(UserInvalidError.Id)
+          Chain(UserInvalidError.Id())
         )
       }
     }
@@ -36,8 +36,8 @@ class UserValidatorTest extends UnitTest {
           new EntityMetaData() {}
         ) shouldBe Invalid(
           Chain(
-            UserInvalidError.Id,
-            UserInvalidError.Name
+            UserInvalidError.Id(),
+            UserInvalidError.Name()
           )
         )
       }

@@ -51,7 +51,7 @@ protected[user] object UserValidator {
         User(id, name, password, metaData).validNec
       catch {
         case _: IllegalArgumentNameAndPasswordSameException =>
-          UserInvalidError.NameAndPasswordSame.invalidNec
+          UserInvalidError.NameAndPasswordSame().invalidNec
         case NonFatal(e) =>
           throw new IllegalArgumentException("user validation error", e)
       }
@@ -66,7 +66,7 @@ protected[user] object UserValidator {
   ): domain.ValidationResult[User] =
     validatedEntity.andThen { user =>
       if (repositoryValidator.verifyForDuplicateNames(user.name)) {
-        UserInvalidError.DuplicationName.invalidNec
+        UserInvalidError.DuplicationName().invalidNec
       } else user.validNec
     }
 
@@ -78,7 +78,7 @@ protected[user] trait UserIdValidator extends Validator[String, UserId] {
       UserId(value).validNec
     catch {
       case NonFatal(_) =>
-        UserInvalidError.Id.invalidNec
+        UserInvalidError.Id().invalidNec
     }
 }
 
@@ -88,7 +88,7 @@ protected[user] trait UserNameValidator extends Validator[String, UserName] {
       UserName(value).validNec
     catch {
       case NonFatal(_) =>
-        UserInvalidError.Name.invalidNec
+        UserInvalidError.Name().invalidNec
     }
 }
 
@@ -98,6 +98,6 @@ protected[user] trait UserRawPasswordValidator extends Validator[String, UserPas
       UserRowPassword(value).generateHash.validNec
     catch {
       case NonFatal(_) =>
-        UserInvalidError.Password.invalidNec
+        UserInvalidError.Password().invalidNec
     }
 }
