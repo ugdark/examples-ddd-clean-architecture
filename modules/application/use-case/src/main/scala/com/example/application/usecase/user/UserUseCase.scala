@@ -2,6 +2,7 @@ package com.example.application.usecase.user
 
 import com.example.application.usecase.{
   DomainErrorOps,
+  IOContextProvider,
   InfraErrorOps,
   UseCaseError,
   UseCaseSystemError,
@@ -16,9 +17,7 @@ object UserUseCase {
   case class Response(user: User)
 }
 
-trait UserUseCase {
-
-  implicit protected val ioContextProvider: IOContextProvider
+trait UserUseCase extends IOContextProvider {
 
   implicit protected val entityIdGenerator: EntityIdGenerator
 
@@ -29,7 +28,7 @@ trait UserUseCase {
   protected val userEventPublisher: UserEventPublisher
 
   def create(request: UserUseCase.Request): Either[UseCaseError, UserUseCase.Response] =
-    ioContextProvider.withTransaction { implicit ioc =>
+    write { implicit ioc =>
       for {
         createdUser <- User.create(request.name, request.password) ifLeftThen asUseCaseError
         _           <- userRepository.store(createdUser.entity) ifFailureThen asUseCaseError

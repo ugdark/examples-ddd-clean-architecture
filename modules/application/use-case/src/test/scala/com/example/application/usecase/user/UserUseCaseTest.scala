@@ -1,20 +1,19 @@
 package com.example.application.usecase.user
 
-import com.example.application.usecase.{UseCaseError, UseCaseSpec}
+import com.example.application.usecase.{IOContextProviderOnEmpty, UseCaseError, UseCaseSpec}
 import com.example.domain.user.{
   UserEvent,
   UserEventPublisher,
   UserRepository,
   UserRepositorySupport
 }
-import com.example.domain.{EntityIdGenerator, EntityMetaDataCreator, IOContext, IOContextProvider}
+import com.example.domain.{EntityIdGenerator, EntityMetaDataCreator, IOContext}
 
 import scala.util.{Success, Try}
 
 class UserUseCaseTest extends UseCaseSpec with UserRepositorySupport {
 
-  protected val userUseCaseFixture: UserUseCase = new UserUseCase {
-    override protected val ioContextProvider: IOContextProvider          = ioContextProviderFixture
+  protected val userUseCaseFixture: UserUseCase = new UserUseCase with IOContextProviderOnEmpty {
     implicit override protected val entityIdGenerator: EntityIdGenerator = entityIdGeneratorFixture
     implicit override protected val entityMetaDataCreator: EntityMetaDataCreator =
       entityMetaDataCreatorFixture

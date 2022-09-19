@@ -8,9 +8,12 @@
 - [x] projectの構成変更 [ADR](docs/src/main/paradox/pages/adr/アーキテクチャについて.md)
 - [x] validatorを実装 [ADR](docs/src/main/paradox/pages/adr/入力チェックについて.md)
 - [x] repositoryを実装
-- [ ] useCase実装
+- [x] useCase実装 
 - [ ] controller実装
+- [ ] validatorのDBチェック周りをbulkにも対応させたい fieldの調整も
+- [ ] testのSupportの乱立に見えるなんかもうちっとまとめたい
 
+色々やりたい事あるけど、とりあえず全体像把握のためにcontroller優先で
 ## 忘れそうなんで
 
 ### format

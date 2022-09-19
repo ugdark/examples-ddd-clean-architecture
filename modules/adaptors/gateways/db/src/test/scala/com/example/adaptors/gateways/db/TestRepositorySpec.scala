@@ -29,13 +29,16 @@ abstract class TestRepositorySpec
     * @return
     */
   implicit def session(implicit ioc: IOContext): DBSession =
-    ioc.asInstanceOf[IOContextOnSkinny].session
+    ioc.asInstanceOf[ScalikeJdbcSessionHolder].dbSession
 
   /** 現在のSessionからIOCに暗黙で置き換えてる
     * @return
     */
   implicit def ioc(implicit session: DBSession): IOContext =
-    IOContextOnSkinny(session, ConnectionPoolName.Write)
+    new IOContext with ScalikeJdbcSessionHolder {
+      override val dbSession: DBSession       = session
+      override val dbName: ConnectionPoolName = ConnectionPoolName.Read
+    }
 
   def withFixture(test: OneArgTest): Outcome =
     using(db()) { implicit db =>

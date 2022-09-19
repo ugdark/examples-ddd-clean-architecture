@@ -2,5 +2,5 @@ Right(Response(User(
   id = UserId("1"),
   name = UserName("test taro"),
   password = UserPassword("b554c1d224d8ef1738ed4ee238317463895d8b3ae2a2ee896e94affbe8fda19d"),
-  metaData = com.example.domain.DomainTestSupport$EntityMetaDataCreatorFixture$MetaDataEmpty$@793493a6
+  metaData = com.example.domain.DomainTestSupport$EntityMetaDataCreatorFixture$MetaDataEmpty$@16a59459
 )))

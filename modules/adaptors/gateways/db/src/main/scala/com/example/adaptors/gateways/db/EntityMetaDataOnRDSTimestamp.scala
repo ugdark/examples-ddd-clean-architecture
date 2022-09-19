@@ -4,6 +4,7 @@ import com.example.domain.{CreatedAt, EntityMetaData, UpdatedAt}
 
 import java.time.Instant
 
+// TODO: RDS側にしなくなったのでUseCase層にお引越ししたい
 case class EntityMetaDataOnRDSTimestamp(
   createdAt: CreatedAt,
   updatedAt: UpdatedAt
