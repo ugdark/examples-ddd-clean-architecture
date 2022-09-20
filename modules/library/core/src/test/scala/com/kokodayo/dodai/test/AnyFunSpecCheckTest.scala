@@ -50,10 +50,10 @@ trait ALL extends BeforeAndAfterAll { this: Suite =>
     finally
       // println(allBuilder)
       allBuilder.clear()
-  // println("beforeAll end")
+  // println("afterAll end")
 }
 
-class ExampleSpec extends AnyFunSpec with Builder with Buffer with ALL {
+class AnyFunSpecCheckTest extends AnyFunSpec with Builder with Buffer with ALL {
 
   describe("Testing") {
     it("should be easy") {
@@ -74,12 +74,12 @@ class ExampleSpec extends AnyFunSpec with Builder with Buffer with ALL {
   }
 }
 
-/* 完全にbeforeAllが最後になってるのを確認
+/* 完全にafterAllが最後になってるのを確認
 beforeAll start
 each start
 each end
 each start
 each end
 ScalaTestAll is easy!fun!
-beforeAll end
+afterAll end
  */
