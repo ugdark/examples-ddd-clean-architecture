@@ -20,7 +20,13 @@ lazy val core = project
 lazy val domain = project
   .in(file("modules/domain"))
   .settings(CommonSettings, TestSettings)
-  .settings(libraryDependencies ++= Seq(Modules.TypeSafe.Config))
+  .settings(
+    libraryDependencies ++= Seq(
+      Modules.TypeSafe.Config,
+      "org.apache.poi" % "poi"       % "5.2.3",
+      "org.apache.poi" % "poi-ooxml" % "5.2.3"
+    )
+  )
   .dependsOn(core % compileAndTest)
 // Application Business Rules (Use Cases)
 // ApplicationがAppなどと被る事もありまたUseCaseを書いていきたいのでuse-caseと定義してます。
@@ -75,6 +81,13 @@ val docs = (project in file("docs"))
 // 実際にインスタンスを持つ外部にServiceとして提供する
 lazy val `api-server` = project
   .in(file("modules/adaptors/controllers/api-server"))
+  .enablePlugins(JavaAppPackaging)
+  .settings(
+    dockerBaseImage    := "adoptopenjdk/openjdk15:slim",
+    dockerEntrypoint   := Seq("/opt/docker/bin/api-server"),
+    dockerUpdateLatest := true,
+    dockerExposedPorts += 4649
+  )
   .settings(CommonSettings, TestSettings)
   .dependsOn(db, api)
 

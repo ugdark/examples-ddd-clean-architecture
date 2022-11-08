@@ -40,8 +40,8 @@ object Dependencies {
     semanticdbVersion := scalafixSemanticdb.revision,
     // scalafixで追加 <--
     libraryDependencies ++= Seq(Modules.CatsCore, Modules.TypeSafe.Config, Modules.Enumeratum),
-    Test / javaOptions ++= Seq(
-      "-Duser.timezone=UTC"
+    javaOptions ++= Seq(
+      "-Duser.timezone=GMT" // ideaのtestのVMOptionには反映されないので付与が必要
     ),
     Test / parallelExecution := true, // 明示的にtrueにしてる
     Test / fork              := true  // Test / javaOptions が効かないのでtrue
@@ -85,15 +85,18 @@ object Dependencies {
     val AkkaHttpCirce: ModuleID = "de.heikoseeberger" %% "akka-http-circe" % "1.39.2"
 
     object TypeSafe {
-      val Config: ModuleID   = "com.typesafe"       % "config"    % "1.4.2"
-      val AkkaHttp: ModuleID = "com.typesafe.akka" %% "akka-http" % "10.2.10"
+      private val AkkaVersion     = "2.6.20"
+      private val AkkaHttpVersion = "10.2.10"
+      val Config: ModuleID        = "com.typesafe"       % "config"    % "1.4.2"
+      val AkkaHttp: ModuleID      = "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion
 
-      private val AkkaVersion = "2.6.20"
       val AkkaLibs: Seq[ModuleID] = Seq(
         "akka-actor-typed",
         "akka-stream"
       ).map("com.typesafe.akka" %% _ % AkkaVersion) ++ Seq(
-        "com.typesafe" %% "ssl-config-core" % "0.6.1"
+        "com.typesafe"      %% "ssl-config-core"     % "0.6.1",
+        "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
+        "com.typesafe.akka" %% "akka-http-testkit"   % AkkaHttpVersion
       )
 
     }

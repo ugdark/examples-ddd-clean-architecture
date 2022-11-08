@@ -3,12 +3,15 @@ package com.example.adaptors.controllers.apiServier
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{ContentType, HttpEntity, MediaTypes, StatusCodes}
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
+import org.apache.poi.ss.usermodel.{Workbook, WorkbookFactory}
 
+import java.io.ByteArrayOutputStream
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration.*
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try, Using}
 
 object Main extends InjectModules {
 
@@ -42,8 +45,35 @@ object Main extends InjectModules {
 
   def main(args: Array[String]): Unit = {
 
+    val health: Route = pathPrefix("health") {
+      complete(StatusCodes.OK -> "Success!!")
+    }
+
+    val check: Route = pathPrefix("check") {
+
+      def writeToByteArray(workbook: Workbook): Try[Array[Byte]] =
+        Using(new ByteArrayOutputStream()) { bos =>
+          workbook.write(bos)
+          bos.toByteArray
+        }
+
+      val workbook: Workbook =
+        WorkbookFactory.create(getClass.getResourceAsStream("/excels/students/password.xlsx"))
+      val arrayByte: Array[Byte] = writeToByteArray(workbook).get
+      complete(
+        HttpEntity(
+          ContentType(
+            MediaTypes.`application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+          ),
+          arrayByte
+        )
+      )
+    }
+
     val rootRoutes: Route =
       concat(
+        health,
+        check,
         userController.routes
       )
 

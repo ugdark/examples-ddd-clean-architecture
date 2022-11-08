@@ -30,6 +30,13 @@ $ sbt format
 $ docker-compose up -d
 ```
 
+### docker化して起動(失敗)
+
+```shell
+$ sbt api-server/docker:publishLocal
+$ docker run -it -p 4649:4649 --rm api-server:1.0.0
+```
+
 ### migration
 
 ```sh
@@ -55,3 +62,6 @@ $ docker-compose up -d
 とりあえずのリンク。まだ参考にしてるわけではない
 
 - [クリーンアーキテクチャ Application Business Rules の役割](https://qiita.com/u-dai/items/f670c3fc5302861aef0b)
+
+試して置きた
+https://qiita.com/urano_ryoya/items/bb1cbf245354a23cb967

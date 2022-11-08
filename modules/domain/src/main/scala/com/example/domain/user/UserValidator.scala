@@ -17,6 +17,7 @@ protected[user] object UserValidator {
     repositoryValidator: UserRepositoryValidator,
     ioc: IOContext
   ): domain.ValidationResult[User] = {
+
     // VOの制約確認
     val validatedVO = validationVO(id, name, password)
 

@@ -12,6 +12,7 @@ import java.time.{LocalDateTime, ZoneId}
 class UTCCheckTest extends AnyFunSpec with Matchers {
 
   it("UTC時間でテストされてる事") {
+    ZoneId.systemDefault() shouldBe ZoneId.of("GMT")
     LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
     // 秒以下は削りたいので
